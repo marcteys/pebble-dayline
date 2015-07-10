@@ -29,7 +29,7 @@ var App = {
   },
   
   initCalendar : function() {
-    Cabble.initDays(CabbleSettings.getDayFormat(),CabbleSettings.getDominantColor(), CabbleSettings.getDayNumber());
+    Cabble.initDays(CabbleSettings.getDayFormat(),CabbleSettings.getBackgroundColor());
     this.updateCalendar();
   },
   
@@ -84,10 +84,13 @@ var App = {
           Settings.option('calendars', e.options.calendars);
           Settings.option('timeformat', e.options.timeformat);
           Settings.option('daytop', e.options.daytop);
-          CabbleWatch.redrawBackground(e.options.background);
-          that.initCalendar();
-         // that.destroy();
-        //  that.init();
+          
+          // TODO : Not destroy everything !!
+          
+         // CabbleWatch.redrawBackground(e.options.background);
+        //  that.initCalendar();
+          that.destroy();
+          that.init();
         }
       }
     );

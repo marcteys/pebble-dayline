@@ -29,7 +29,7 @@ var CabbleSettings = {
         apiUrl += calendars[i].name;
       }
     }
-    apiUrl += '&days=' + this.getDayNumber();
+    apiUrl += '&days=1';
     apiUrl += '&callback=?';
     return apiUrl;
   },
@@ -56,7 +56,6 @@ var CabbleSettings = {
     if(Settings.option('dayformat')  !== undefined) dayFormat = Settings.option('dayformat');
     return dayFormat;
   },
-  
   
   getDayTop : function() {
     var dayTop = true;

@@ -23,11 +23,12 @@ var CabbleWatch = {
     });
     mainWindow.add(this.rightBar);
 
-    var calendarIcon = new UI.Rect({
+    var calendarIcon = new UI.Image({
       size: new Vector2(21, 24),
-      position: new Vector2(119, 6),
-      image : 'images/calendar-icon.png'
+      position: new Vector2(119, 6)
     });
+    calendarIcon.image('images/calendar-icon.png');
+
     mainWindow.add(calendarIcon);
  
     var formatString = '%I:%M';
@@ -38,7 +39,7 @@ var CabbleWatch = {
     this.textfield =  new UI.TimeText ({
       position: timePosition,
       size: new Vector2(114, 50),
-      font: 'bitham-34-medium-number',
+      font: 'bitham-42-light',
       text: formatString,
       textAlign : 'center',
       color : dominantColor

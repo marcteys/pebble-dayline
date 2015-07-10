@@ -4,41 +4,28 @@ var Vector2 = require('vector2');
 var DaysItem =  {
   // One day : From 8am to 6PM, 1 hour = 4px;
   // 15 minutes = 1px
-  height: 40,
-  width:14,
-  margin: 5,
-  startHeight : 120,
-  leftMargin: 8,
+  height: 116,
+  width:13,
+  startX: 123,
+  startY : 40,
+  rowMargin : 2,
   mainWidow : null,
-  dayStarAt : 800,
   eventsGraphic : [],
 
-  init : function(mainWindow,  dayNumber, dominantColor) {
+  init : function(mainWindow,  backgroundColor) {
     var that = this;
-    var rectPosition = new Vector2(that.leftMargin + (that.width + that.margin)  , that.startHeight);
-
-    var dayText =  new UI.Text ({
-      position: new Vector2(rectPosition.x-3, rectPosition.y-21),
-      size: new Vector2(that.width+6, 20),
-      font: 'gothic-14',
-      textAlign : 'center',
-      text: dayNumber,
-      color : dominantColor
+    var dayBorder = new UI.Rect({
+      size: new Vector2(that.width+4, that.height+4),
+      position: new Vector2(that.startX-2, that.startY-2),
+      backgroundColor : 'black'
     });
-    this.mainWindow.add(dayText);
-
-    var rect = new UI.Rect({
-      size: new Vector2(that.width, 0),
-      backgroundColor : dominantColor,
-      position: rectPosition
+    var dayRect = new UI.Rect({
+      size: new Vector2(that.width, that.height),
+      position: new Vector2(that.startX, that.startY),
+      backgroundColor : backgroundColor
     });
-    this.mainWindow.add(rect);
-    rect.animate('size', new Vector2(that.width, that.height), 400);
-
-    var dayRect = {
-      rectPosition : rectPosition,
-      id : id
-    };
+    this.mainWindow.add(dayBorder);
+    this.mainWindow.add(dayRect);
     return dayRect;
   },
 
@@ -50,7 +37,7 @@ var DaysItem =  {
     if(data.allDay === true) {
       if(data.duration + data.day > 7) data.duration = 7 - data.day;
       for(var i = 0,  j=data.duration; i < j ; i++) {
-        var dayEventPosition = new Vector2(dayRect.rectPosition.x + (that.width + that.margin)  * i  , that.startHeight - 4);
+        var dayEventPosition = new Vector2(that.startX + (that.width + that.margin)   , that.startHeight - 4);
         var rectDayEvent = new UI.Rect({
           size: new Vector2(eventWidth,2),
           backgroundColor : color,
@@ -63,7 +50,7 @@ var DaysItem =  {
     else { // normal event case
       var durationToPixels = Math.ceil(data.duration / 15); //always display at least 1px height
       var startTimeToPixels = Math.ceil(data.startTime / 15);
-      var eventPosition = new Vector2(dayRect.rectPosition.x, dayRect.rectPosition.y + startTimeToPixels);
+      var eventPosition = new Vector2(that.startX + that.rowMargin, that.startY + startTimeToPixels + that.rowMargin);
       var eventEnd = durationToPixels + eventPosition.y;
 
       if( eventEnd > this.startHeight + this.height) { // tim end
@@ -73,7 +60,7 @@ var DaysItem =  {
     
       var rectEvent = new UI.Rect({
         //size: new Vector2(eventWidth,0),
-        size: new Vector2(eventWidth,durationToPixels),
+        size: new Vector2(eventWidth - that.rowMargin *2 ,durationToPixels),
         backgroundColor : color,
         position: eventPosition
       });
@@ -100,9 +87,6 @@ var DaysItem =  {
     this.mainWindow = window;
   },
   
-  setWidth : function(dayNumber) {
-    this.width = Math.ceil((144-(this.leftMargin*2) - (this.margin*(dayNumber-1)) ) / dayNumber);
-  }
 
 };
 this.exports = DaysItem;

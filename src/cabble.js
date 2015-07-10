@@ -4,7 +4,7 @@ var Settings = require('settings');
 
 var Cabble = {
   
-  today : null,
+  timeline : null,
   mainWindow : null,
   
   getCalendar: function(varURL) {
@@ -20,15 +20,7 @@ var Cabble = {
   },
 
   initDays : function(dayFormat, rectColor, dayNumber) {
-    var today = new Date();
-    var daysTextArray = ["Su","Mo","Tu","We","Th","Fr","Sa"];
-    DaysItem.setWidth(dayNumber);
-      var dayDate = new Date(today);
-      
-      var dayText = dayDate.getDate();
-      if(dayFormat == "day") dayText = daysTextArray[dayDate.getDay()];
-      
-      this.today = DaysItem.init(this.mainWindow, dayText, rectColor);
+      this.timeline = DaysItem.init(this.mainWindow, rectColor);
   },
   
   fetchEvents : function(data) {
@@ -38,7 +30,7 @@ var Cabble = {
           data.calendars[i].events[k].duration =  data.calendars[i].events[k].duration + data.calendars[i].events[k].day;
           data.calendars[i].events[k].day = 0;
         }
-        DaysItem.createEvent(this.days[data.calendars[i].events[k].day], data.calendars[i].events[k], Settings.option('calendars')[i].color );
+        DaysItem.createEvent(this.timeline, data.calendars[i].events[k], Settings.option('calendars')[i].color);
       }
     }    
   },
