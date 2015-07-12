@@ -25,9 +25,10 @@ var CabbleWatch = {
 
     var calendarIcon = new UI.Image({
       size: new Vector2(21, 24),
-      position: new Vector2(119, 6)
+      position: new Vector2(119, 6),
+      image : 'images/calendar-icon.png',
+      compositing : 'set'
     });
-    calendarIcon.image('images/calendar-icon.png');
 
     mainWindow.add(calendarIcon);
  
@@ -53,7 +54,7 @@ var CabbleWatch = {
         font: 'gothic-18-bold',
         text: '%a %d',
         textAlign : 'left',
-        color : dominantColor
+        color : 'black'
       });
       mainWindow.add(dayText);
     }

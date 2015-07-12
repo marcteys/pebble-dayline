@@ -6,8 +6,6 @@ var Cabble = require('cabble');
 var CabbleWatch = require('cabbleWatch');
 var CabbleSettings = require('cabbleSettings');
 
-//TODO : Weather 
-// http://api.openweathermap.org/data/2.5/forecast/daily?q=London&units=metric&cnt=7
 
 var App = {
   
@@ -69,12 +67,13 @@ var App = {
 
   initSettings : function() {
     var that = this;
+    CabbleSettings.setLocalisation();
   //  that.displayMessage("waiting for update");
     Settings.config(
       { url: CabbleSettings.getSettingsURL() },
       function(e) {
         if (e.failed) {
-          this.displayMessage("Failed to load the calendar : " + CabbleSettings.getSettingsURL());
+      //    this.displayMessage("Failed to load the calendar : " + CabbleSettings.getSettingsURL());
           console.log("Error for : " +  CabbleSettings.getSettingsURL() + " "+ e.response);
         } else {
           //Cabble.deleteEvents();
@@ -84,6 +83,7 @@ var App = {
           Settings.option('calendars', e.options.calendars);
           Settings.option('timeformat', e.options.timeformat);
           Settings.option('daytop', e.options.daytop);
+          Settings.option('weather', e.options.weather);
           
           // TODO : Not destroy everything !!
           

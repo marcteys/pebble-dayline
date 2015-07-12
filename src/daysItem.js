@@ -3,25 +3,28 @@ var Vector2 = require('vector2');
 
 var DaysItem =  {
   // One day : From 8am to 6PM, 1 hour = 4px;
-  // 15 minutes = 1px
-  height: 116,
-  width:13,
-  startX: 123,
-  startY : 40,
+  // 11 minutes = 1px
+  height: 112,
+  width:9,
+  startX: 125,
+  startY : 42,
   rowMargin : 2,
   mainWidow : null,
+  pixelToMinute : null,
   eventsGraphic : [],
 
   init : function(mainWindow,  backgroundColor) {
+    this.pixelToMinute = 600/(this.height);
+    
     var that = this;
     var dayBorder = new UI.Rect({
-      size: new Vector2(that.width+4, that.height+4),
-      position: new Vector2(that.startX-2, that.startY-2),
+      size: new Vector2(that.width+8, that.height+8),
+      position: new Vector2(that.startX-4, that.startY-4),
       backgroundColor : 'black'
     });
     var dayRect = new UI.Rect({
-      size: new Vector2(that.width, that.height),
-      position: new Vector2(that.startX, that.startY),
+      size: new Vector2(that.width+4, that.height+4),
+      position: new Vector2(that.startX-2, that.startY-2),
       backgroundColor : backgroundColor
     });
     this.mainWindow.add(dayBorder);
@@ -48,19 +51,19 @@ var DaysItem =  {
       }
     }
     else { // normal event case
-      var durationToPixels = Math.ceil(data.duration / 15); //always display at least 1px height
-      var startTimeToPixels = Math.ceil(data.startTime / 15);
-      var eventPosition = new Vector2(that.startX + that.rowMargin, that.startY + startTimeToPixels + that.rowMargin);
+      var durationToPixels = Math.floor(data.duration / this.pixelToMinute); //always display at least 1px height
+      var startTimeToPixels = Math.floor(data.startTime / this.pixelToMinute);
+      var eventPosition = new Vector2(that.startX, that.startY + startTimeToPixels);
       var eventEnd = durationToPixels + eventPosition.y;
 
-      if( eventEnd > this.startHeight + this.height) { // tim end
-        var leftOver = eventEnd - (this.startHeight + this.height);
-        durationToPixels -= leftOver;
+      if( eventEnd > this.startY + this.height) { // tim end
+        var leftOver = eventEnd - (this.startY + this.height) ;
+       durationToPixels -= leftOver;
       }
     
       var rectEvent = new UI.Rect({
         //size: new Vector2(eventWidth,0),
-        size: new Vector2(eventWidth - that.rowMargin *2 ,durationToPixels),
+        size: new Vector2(eventWidth ,durationToPixels),
         backgroundColor : color,
         position: eventPosition
       });
