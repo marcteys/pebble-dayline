@@ -32,7 +32,7 @@ var App = {
   },
   
   updateWeather : function() {
-    Functions.getWeather(DayLineSettings.getWeatherURL(), DayLineWatch.weatherText);
+    Functions.getWeather(DayLineSettings.getWeatherURL());
   },
   
   updateCalendar : function() {

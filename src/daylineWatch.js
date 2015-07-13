@@ -16,6 +16,7 @@ var DayLineWatch = {
       backgroundColor : backgroundColor
     });
     mainWindow.add(this.backgroundRect);
+    console.log(backgroundColor);
     
     this.rightBar = new UI.Rect({
       size: new Vector2(30, 168),
@@ -60,7 +61,7 @@ var DayLineWatch = {
       mainWindow.add(dayText);
     }
     
-   //this.updateWeatherText("Loading...");
+   this.updateWeatherText("Loading...");
     
     mainWindow.show();
   },
@@ -80,7 +81,7 @@ var DayLineWatch = {
       this.weatherText.remove();
     }
     this.weatherText =  new UI.TimeText ({
-      position: new Vector2(6, 20),
+      position: new Vector2(6, 23),
       size: new Vector2(114, 30),
       font: 'gothic-18',
       text: weatherText,

@@ -1,7 +1,7 @@
 var ajax = require('ajax');
 var DaysItem = require('daysItem');
 var Settings = require('settings');
-var daylineWatch = require('daylineWatch');
+var DayLineWatch = require('daylineWatch');
 
 var Functions = {
   
@@ -17,7 +17,6 @@ var Functions = {
     ajax({url: varURL, type: 'json'},
          function(data) {
             that.fetchEvents(data);
-           console.log(JSON.stringify(data));
          },
          function(error) {
            console.log('Ajax failed: ' + error);
@@ -25,12 +24,11 @@ var Functions = {
         );
   },
 
-  getWeather: function(varURL, textZone) {
+  getWeather: function(varURL) {
     var that = this;
-    console.log("z");
     ajax({url: varURL, type: 'json'},
          function(data) {
-            that.displayWeather(data,textZone);
+            that.displayWeather(data);
          },
          function(error) {
            console.log('Ajax failed: ' + error);
@@ -39,7 +37,8 @@ var Functions = {
   },
   
   displayWeather : function(data,textZone) {
-    daylineWatch.redrawBackground(data.temp + "° " + data.weather);
+   console.log(JSON.stringify(data));
+     DayLineWatch.updateWeatherText(data.main.temp + "° " + data.weather[0].main);
     console.log(data.weather);
     console.log(Math.round(data.temp));
   },
