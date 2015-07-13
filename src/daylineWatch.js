@@ -1,7 +1,7 @@
 var UI = require('ui');
 var Vector2 = require('vector2');
 
-var CabbleWatch = {
+var DayLineWatch = {
 
   window : null,
   textfield : null,
@@ -71,4 +71,4 @@ var CabbleWatch = {
   }
 
 };
-this.exports = CabbleWatch;
+this.exports = DayLineWatch;

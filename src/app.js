@@ -2,9 +2,9 @@ var UI = require('ui');
 var Vector2 = require('vector2');
 var Settings = require('settings');
 
-var Cabble = require('cabble');
-var CabbleWatch = require('cabbleWatch');
-var CabbleSettings = require('cabbleSettings');
+var Functions = require('functions');
+var DayLineWatch = require('daylineWatch');
+var DayLineSettings = require('daylineSettings');
 
 
 var App = {
@@ -15,8 +15,8 @@ var App = {
   
   init:function() {
     if(this.mainWindow === null) this.mainWindow = new UI.Window({fullscreen : true });
-    CabbleWatch.init(this.mainWindow, CabbleSettings.getBackgroundColor(), CabbleSettings.getDominantColor(), CabbleSettings.getTimeFormat(), CabbleSettings.getDayTop());
-    Cabble.setWindow(this.mainWindow);
+    DayLineWatch.init(this.mainWindow, DayLineSettings.getBackgroundColor(), DayLineSettings.getDominantColor(), DayLineSettings.getTimeFormat(), DayLineSettings.getDayTop());
+    Functions.setWindow(this.mainWindow);
     this.initSettings();
     
     if(Settings.option('refresh_token') === undefined) {
@@ -27,12 +27,12 @@ var App = {
   },
   
   initCalendar : function() {
-    Cabble.initDays(CabbleSettings.getDayFormat(),CabbleSettings.getBackgroundColor());
+    Functions.initDays(DayLineSettings.getDayFormat(),DayLineSettings.getBackgroundColor());
     this.updateCalendar();
   },
   
   updateCalendar : function() {
-    Cabble.getCalendar( CabbleSettings.getApiURL());
+    Functions.getCalendar( DayLineSettings.getApiURL());
     this.scheduleWakeup(15);
     this.removeMessage(this.customMessage, 0);
   },
@@ -47,7 +47,7 @@ var App = {
       font: 'gothic-18',
       textAlign : 'center',
       text: message,
-      color : CabbleSettings.getDominantColor(),
+      color : DayLineSettings.getDominantColor(),
     });
     this.mainWindow.add(this.customMessage);
     
@@ -67,16 +67,16 @@ var App = {
 
   initSettings : function() {
     var that = this;
-    CabbleSettings.setLocalisation();
+    DayLineSettings.setLocalisation();
   //  that.displayMessage("waiting for update");
     Settings.config(
-      { url: CabbleSettings.getSettingsURL() },
+      { url: DayLineSettings.getSettingsURL() },
       function(e) {
         if (e.failed) {
-      //    this.displayMessage("Failed to load the calendar : " + CabbleSettings.getSettingsURL());
-          console.log("Error for : " +  CabbleSettings.getSettingsURL() + " "+ e.response);
+      //    this.displayMessage("Failed to load the calendar : " + DayLineSettings.getSettingsURL());
+          console.log("Error for : " +  DayLineSettings.getSettingsURL() + " "+ e.response);
         } else {
-          //Cabble.deleteEvents();
+          //Functions.deleteEvents();
           Settings.option('refresh_token', e.options.refresh_token);
           Settings.option('background', e.options.background);
           Settings.option('dominant', e.options.dominant);

@@ -1,7 +1,6 @@
 var Settings = require('settings');
-var Settings = require('settings');
 
-var CabbleSettings = {
+var DayLineSettings = {
 
   baseUrl : "http://half4.com/cabble/cabble.php?",
   weatherURL : "http://api.openweathermap.org/data/2.5/weather?",
@@ -104,4 +103,4 @@ var CabbleSettings = {
   }
 
 };
-this.exports = CabbleSettings;
+this.exports = DayLineSettings;

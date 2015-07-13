@@ -2,7 +2,7 @@ var ajax = require('ajax');
 var DaysItem = require('daysItem');
 var Settings = require('settings');
 
-var Cabble = {
+var Functions = {
   
   timeline : null,
   mainWindow : null,
@@ -45,4 +45,4 @@ var Cabble = {
   }
   
 };
-this.exports = Cabble;
+this.exports = Functions;
