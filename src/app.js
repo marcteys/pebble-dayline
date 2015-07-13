@@ -6,7 +6,6 @@ var Functions = require('functions');
 var DayLineWatch = require('daylineWatch');
 var DayLineSettings = require('daylineSettings');
 
-
 var App = {
   
   mainWindow: null,
@@ -29,6 +28,11 @@ var App = {
   initCalendar : function() {
     Functions.initDays(DayLineSettings.getDayFormat(),DayLineSettings.getBackgroundColor());
     this.updateCalendar();
+    this.updateWeather();
+  },
+  
+  updateWeather : function() {
+    Functions.getWeather(DayLineSettings.getWeatherURL(), DayLineWatch.weatherText);
   },
   
   updateCalendar : function() {

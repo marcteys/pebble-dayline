@@ -7,6 +7,7 @@ var DayLineWatch = {
   textfield : null,
   backgroundRect : null,
   rightBar : null,
+  weatherText : null,
 
   init: function(mainWindow, backgroundColor, dominantColor, timeFormat, dayTop) {
     this.window = mainWindow;
@@ -49,7 +50,7 @@ var DayLineWatch = {
     
     if(dayTop) {
      var dayText =  new UI.TimeText ({
-        position: new Vector2(12, 4),
+        position: new Vector2(6, 4),
         size: new Vector2(50, 30),
         font: 'gothic-18-bold',
         text: '%a %d',
@@ -58,6 +59,9 @@ var DayLineWatch = {
       });
       mainWindow.add(dayText);
     }
+    
+   //this.updateWeatherText("Loading...");
+    
     mainWindow.show();
   },
   
@@ -68,7 +72,23 @@ var DayLineWatch = {
         backgroundColor : newColor
     });
     this.window.insert(0,this.backgroundRect);
+  },
+  
+  updateWeatherText : function(weatherText)
+  {
+    if(this.weatherText !== null) {
+      this.weatherText.remove();
+    }
+    this.weatherText =  new UI.TimeText ({
+      position: new Vector2(6, 20),
+      size: new Vector2(114, 30),
+      font: 'gothic-18',
+      text: weatherText,
+      textAlign : 'left',
+      color : 'black'
+    });
+    this.window.add(    this.weatherText);
   }
-
+  
 };
 this.exports = DayLineWatch;
