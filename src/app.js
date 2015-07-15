@@ -1,5 +1,4 @@
 var UI = require('ui');
-var Vector2 = require('vector2');
 var Settings = require('settings');
 
 var Functions = require('functions');
@@ -14,12 +13,12 @@ var App = {
   
   init:function() {
     if(this.mainWindow === null) this.mainWindow = new UI.Window({fullscreen : true });
-    DayLineWatch.init(this.mainWindow, DayLineSettings.getBackgroundColor(), DayLineSettings.getDominantColor(), DayLineSettings.getTimeFormat(), DayLineSettings.getDayTop());
+    DayLineWatch.init(this.mainWindow, DayLineSettings.getBackgroundColor(), DayLineSettings.getDominantColor(),DayLineSettings.getTextColor(), DayLineSettings.getTimeFormat(), DayLineSettings.getDayTop());
     Functions.setWindow(this.mainWindow);
     this.initSettings();
     
     if(Settings.option('refresh_token') === undefined) {
-      this.displayMessage("Open Pebble app to setup the watchface");
+      DayLineWatch.displayMessage("Open Pebble app to setup.");
     } else {
       this.initCalendar();
     }
@@ -41,38 +40,11 @@ var App = {
     this.removeMessage(this.customMessage, 0);
   },
   
-  displayMessage : function(message) {
-    this.removeMessage(this.customMessage, 400);
-    //TODO : if removeMessage exists, animate it. 
-    var messagePos = new Vector2(-144, 110);
-    this.customMessage =  new UI.Text ({
-      position: messagePos,
-      size: new Vector2(144, 50),
-      font: 'gothic-18',
-      textAlign : 'center',
-      text: message,
-      color : DayLineSettings.getDominantColor(),
-    });
-    this.mainWindow.add(this.customMessage);
-    
-    messagePos.x = 0;
-    this.customMessage.animate('position', messagePos, 400);
-  },
-  
-  removeMessage : function(element, speed){
-   if(element) {
-     var pos = element.position();
-     pos.x = 144;
-     element.animate('position', pos, 400).queue(function() {
-       element.remove();
-     });
-   } 
-  },
-
   initSettings : function() {
     var that = this;
     DayLineSettings.setLocalisation();
   //  that.displayMessage("waiting for update");
+    DayLineWatch.updateWeatherText("Select a city");
     Settings.config(
       { url: DayLineSettings.getSettingsURL() },
       function(e) {
@@ -84,6 +56,7 @@ var App = {
           Settings.option('refresh_token', e.options.refresh_token);
           Settings.option('background', e.options.background);
           Settings.option('dominant', e.options.dominant);
+          Settings.option('textcol', e.options.textcol);
           Settings.option('calendars', e.options.calendars);
           Settings.option('timeformat', e.options.timeformat);
           Settings.option('daytop', e.options.daytop);

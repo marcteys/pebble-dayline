@@ -36,13 +36,13 @@ var Functions = {
         );
   },
   
-  displayWeather : function(data,textZone) {
-   console.log(JSON.stringify(data));
-     DayLineWatch.updateWeatherText(data.main.temp + "° " + data.weather[0].main);
-    console.log(data.weather);
-    console.log(Math.round(data.temp));
+  displayWeather : function(data) {
+    console.log(JSON.stringify(data));
+    if(data.cod === "404") DayLineWatch.updateWeatherText("No city found");
+    else  DayLineWatch.updateWeatherText(Math.round(parseInt(data.main.temp)) + "°- " + data.weather[0].description);
+    //                                                                         ^-- data.weather[0].main 
   },
-  
+    
   fetchEvents : function(data) {
     if(data.calendars.length !== null) {
       for(var i = 0,  j = data.calendars.length; i < j ; i++) {
