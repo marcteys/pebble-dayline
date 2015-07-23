@@ -34,11 +34,6 @@
                 "file": "images/calendar-icon.png",
                 "name": "IMAGES_CALENDAR_ICON_PNG",
                 "type": "png"
-            },
-            {
-                "file": "images/Untitled-2.png",
-                "name": "IMAGES_UNTITLED_2_PNG",
-                "type": "png"
             }
         ]
     },

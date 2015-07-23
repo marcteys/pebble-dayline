@@ -4,8 +4,6 @@ var DayLineSettings = {
 
   baseUrl : "http://half4.com/cabble/cabble.php?",
   weatherURL : "http://api.openweathermap.org/data/2.5/weather?",
-//TODO : Weather 
-// http://api.openweathermap.org/data/2.5/forecast/daily?q=London&units=metric&cnt=7
 
   isSettingsInit : function () {
     if(Settings.option('calendars')  !== undefined) return true;
@@ -18,6 +16,7 @@ var DayLineSettings = {
     if(this.isSettingsInit) {
       settingsUrl += encodeURIComponent(JSON.stringify(Settings.option()));
     }
+    console.log(settingsUrl);
     return settingsUrl;
   },
   
@@ -72,8 +71,10 @@ var DayLineSettings = {
     };
     if (navigator && navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(locationSuccess, locationError, {maximumAge:0, timeout:1000, enableHighAccuracy:true});
+      return true;
     } else {
       console.log('No geolocation');
+      return false;
     }
   },
   
@@ -95,7 +96,7 @@ var DayLineSettings = {
   },
   
   getTimeFormat : function() {
-    var timeformat = '12';
+    var timeformat = '24';
     if(Settings.option('timeformat')  !== undefined) timeformat = Settings.option('timeformat');
     return timeformat;
   },

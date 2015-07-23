@@ -27,8 +27,16 @@ var DaysItem =  {
       position: new Vector2(that.startX-2, that.startY-2),
       backgroundColor : backgroundColor
     });
+    var calendarIcon = new UI.Image({
+      size: new Vector2(21, 24),
+      position: new Vector2(119, 6),
+      image : 'images/calendar-icon.png',
+      compositing : 'set'
+    });
     this.mainWindow.add(dayBorder);
     this.mainWindow.add(dayRect);
+    this.mainWindow.add(calendarIcon);
+    
     return dayRect;
   },
 
@@ -36,8 +44,8 @@ var DaysItem =  {
     var that = this;
     var eventWidth = this.width;
     //TODO : Conter le nombre de calendrier, le passer dans data. On divise la largeur par le nombre de calendriers et on le décale en fonction de quel calendrier on est. 
-    //If the event is all the day
-    if(data.allDay === true) {
+    //If the event is all the d == 0ay
+    if(data.allDay === true && 1===0) { // TODO : Visual for this function !!
       if(data.duration + data.day > 7) data.duration = 7 - data.day;
       for(var i = 0,  j=data.duration; i < j ; i++) {
         var dayEventPosition = new Vector2(that.startX + (that.width + that.margin)   , that.startHeight - 4);

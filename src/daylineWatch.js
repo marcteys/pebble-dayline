@@ -13,10 +13,9 @@ var DayLineWatch = {
   
   init: function(mainWindow, backgroundColor, dominantColor, textColor, timeFormat, dayTop) {
     var that = this;
-    
     this.colors.textColor = textColor;
-    
     this.window = mainWindow;
+    
     this.backgroundRect = new UI.Rect({
       size: new Vector2(144, 168),
       backgroundColor : backgroundColor
@@ -40,9 +39,9 @@ var DayLineWatch = {
     mainWindow.add(calendarIcon);
  
     var formatString = '%I:%M';
-    var timePosition = new Vector2(0, 57);
+    var timePosition = new Vector2(0, 62);
     if(timeFormat == "24") formatString = '%H:%M';
-    if(!dayTop) timePosition = new Vector2(0, 23);
+    if(!dayTop) timePosition = new Vector2(0, 62);
     
     this.textfield =  new UI.TimeText ({
       position: timePosition,
@@ -88,7 +87,7 @@ var DayLineWatch = {
       this.weatherText.remove();
     }
     var that = this;
-    
+    console.log("Display weather");
     this.weatherText =  new UI.TimeText ({
       position: new Vector2(6, 23),
       size: new Vector2(114, 30),
@@ -104,7 +103,6 @@ var DayLineWatch = {
     var that = this;
     
     this.removeMessage(this.customMessage, 400);
-    //TODO : if removeMessage exists, animate it. 
     var messagePos = new Vector2(-144, 110);
     this.customMessage =  new UI.Text ({
       position: messagePos,

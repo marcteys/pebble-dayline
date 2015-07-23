@@ -39,15 +39,15 @@ var Functions = {
   displayWeather : function(data) {
     console.log(JSON.stringify(data));
     if(data.cod === "404") DayLineWatch.updateWeatherText("No city found");
-    else  DayLineWatch.updateWeatherText(Math.round(parseInt(data.main.temp)) + "°- " + data.weather[0].description);
-    //                                                                         ^-- data.weather[0].main 
+    else  DayLineWatch.updateWeatherText(Math.round(parseInt(data.main.temp)) + "°- " + data.weather[0].main);
+    //                                                                         ^-- data.weather[0].description 
   },
     
   fetchEvents : function(data) {
     if(data.calendars.length !== null) {
       for(var i = 0,  j = data.calendars.length; i < j ; i++) {
         for(var k = 0,  m = data.calendars[i].events.length; k < m; k++) {
-          if(data.calendars[i].events[k].day < 0) { // filter allDay events started in the past
+          if(data.calendars[i].events[k].day < 0) { 
             data.calendars[i].events[k].duration =  data.calendars[i].events[k].duration + data.calendars[i].events[k].day;
             data.calendars[i].events[k].day = 0;
           }

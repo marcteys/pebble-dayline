@@ -4,11 +4,14 @@ var Settings = require('settings');
 var Functions = require('functions');
 var DayLineWatch = require('daylineWatch');
 var DayLineSettings = require('daylineSettings');
+//BUG : GPS NOT WORKING !
+// http://half4.com/cabble/cabble.php?page=settings&project=dayline&%7B%22gps%22%3A%7B%22longitude%22%3A-77.4875%2C%22latitude%22%3A39.0437%2C%22accuracy%22%3A1000%7D%7D&return_to=https%3A//cloudpebble.net/ide/emulator/config%3F#%7B%22gps%22%3A%7B%22longitude%22%3A-77.4875%2C%22latitude%22%3A39.0437%2C%22accuracy%22%3A1000%7D%7D
+// TODO : Timer refresh
+// TODO : Add calendar icon only 
 
 var App = {
   
   mainWindow: null,
-  customMessage : null,
   refreshTimeout : null,
   
   init:function() {
@@ -37,7 +40,7 @@ var App = {
   updateCalendar : function() {
     Functions.getCalendar( DayLineSettings.getApiURL());
     this.scheduleWakeup(15);
-    this.removeMessage(this.customMessage, 0);
+    DayLineWatch.removeMessage(DayLineWatch.customMessage, 0);
   },
   
   initSettings : function() {
@@ -49,10 +52,8 @@ var App = {
       { url: DayLineSettings.getSettingsURL() },
       function(e) {
         if (e.failed) {
-      //    this.displayMessage("Failed to load the calendar : " + DayLineSettings.getSettingsURL());
           console.log("Error for : " +  DayLineSettings.getSettingsURL() + " "+ e.response);
         } else {
-          //Functions.deleteEvents();
           Settings.option('refresh_token', e.options.refresh_token);
           Settings.option('background', e.options.background);
           Settings.option('dominant', e.options.dominant);
@@ -63,7 +64,6 @@ var App = {
           Settings.option('weather', e.options.weather);
           
           // TODO : Not destroy everything !!
-          
          // CabbleWatch.redrawBackground(e.options.background);
         //  that.initCalendar();
           that.destroy();
