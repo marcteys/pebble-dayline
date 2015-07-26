@@ -28,15 +28,6 @@ var DayLineWatch = {
       backgroundColor : dominantColor
     });
     mainWindow.add(this.rightBar);
-
-    var calendarIcon = new UI.Image({
-      size: new Vector2(21, 24),
-      position: new Vector2(119, 6),
-      image : 'images/calendar-icon.png',
-      compositing : 'set'
-    });
-
-    mainWindow.add(calendarIcon);
  
     var formatString = '%I:%M';
     var timePosition = new Vector2(0, 62);

@@ -1,5 +1,6 @@
 var UI = require('ui');
 var Settings = require('settings');
+var Wakeup = require('wakeup');
 
 var Functions = require('functions');
 var DayLineWatch = require('daylineWatch');
@@ -38,9 +39,43 @@ var App = {
   },
   
   updateCalendar : function() {
+    var that = this;
+    console.log("update calendar");
     Functions.getCalendar( DayLineSettings.getApiURL());
     this.scheduleWakeup(15);
     DayLineWatch.removeMessage(DayLineWatch.customMessage, 0);
+    
+    var today = new Date();
+    var newDateObj = new Date(today.getTime() + 1*60000);
+    console.log('date ' +  newDateObj.getTime());
+    //    number of seconds --------------------------^
+ //   Wakeup.cancel('all');
+    this.scheduleWakeup(1);
+    console.log("Current date :" + today.getTime() +" , set date :" + newDateObj.getTime());
+    Wakeup.schedule(
+      {
+        // Set the wakeup event for one minute from now
+        time: newDateObj.getTime()/*Date.now() / 1000 + 60*/,
+        data: { hello: 'world' }
+      },
+      function(e) {
+        if (e.failed) {
+          console.log('Wakeup set failed: ' + e.error);
+        } else {
+          console.log('Wakeup set! Event ID: ' + e.id);
+        }
+      }
+    );
+    
+  Wakeup.launch(function(e) {
+    if (e.wakeup) {
+      console.log('Woke up to ' + e.id + '! data: ' + JSON.stringify(e.data));
+      App.updateCalendar();
+    } else {
+      console.log('Regular launch not by a wakeup event.');
+    }
+  });
+  
   },
   
   initSettings : function() {
@@ -65,9 +100,10 @@ var App = {
           
           // TODO : Not destroy everything !!
          // CabbleWatch.redrawBackground(e.options.background);
-        //  that.initCalendar();
-          that.destroy();
-          that.init();
+       //  Functions.deleteEvents();
+         that.initCalendar();
+         // that.destroy();
+         // that.init();
         }
       }
     );
@@ -83,8 +119,11 @@ var App = {
     /* 
     * Do not use setTimout // find an other solution
     * 
-    * var that = this;
-    this.refreshTimeout = setTimeout(that.updateCalendar, time * 60000);*/
+    */ var that = this;
+    this.refreshTimeout = setTimeout(function()  {
+       Functions.deleteEvents();
+       that.updateCalendar();
+    }, (time * 60000) / 6 );
   },
 
 };

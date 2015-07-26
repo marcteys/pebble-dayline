@@ -1,6 +1,8 @@
 var UI = require('ui');
 var Vector2 = require('vector2');
 
+//TODO : 1px line to show where we are in the day
+
 var DaysItem =  {
   // One day : From 8am to 6PM, 1 hour = 4px;
   // 11 minutes = 1px
@@ -75,7 +77,7 @@ var DaysItem =  {
         backgroundColor : color,
         position: eventPosition
       });
-      this.eventsGraphic.push(rectEvent.id);
+      this.eventsGraphic.push(rectEvent);
       this.mainWindow.add(rectEvent);
       
       //rectEvent.animate('size', new Vector2(eventWidth,durationToPixels), 0);
@@ -85,10 +87,13 @@ var DaysItem =  {
   
   deleteEvents : function() {
     if(this.eventsGraphic.length !== 0) {
-      for(var i = this.eventsGraphic.length; i > 0 ;  i -- ) {
+      for(var i = this.eventsGraphic.length; i >= 0 ;  i -- ) {
          try{
            this.eventsGraphic[i].remove();
-         } catch(e) { } 
+           this.eventsGraphic.splice(i, 1);
+         } catch(e) {
+         console.log(e);
+         } 
       }
       this.eventsGraphic = [];
     }
