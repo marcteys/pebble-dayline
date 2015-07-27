@@ -101,6 +101,7 @@ var App = {
   },
   
   destroy: function(time) {
+    console.log("Destroy app");
    this.mainWindow.each(function(element) {
      element.remove();
    });

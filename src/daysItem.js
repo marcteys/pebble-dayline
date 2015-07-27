@@ -61,7 +61,7 @@ var DaysItem =  {
       }
     }
     else { // normal event case
- //     console.log(data.startTime);
+      console.log(data.startTime);
       var xPos = that.startX + (overlapingEvents * eventWidth); // in case of overlaping events
       var durationToPixels = Math.floor(data.duration / this.pixelToMinute); //always display at least 1px height
       var startTimeToPixels = Math.floor(data.startTime / this.pixelToMinute);
@@ -89,15 +89,18 @@ var DaysItem =  {
   },
   
   displayTimeBar : function(dayRect, hour, color) {
+    hour = parseInt(hour);
     if(this.timebar !== null) {
       console.log("delete timebar");
       this.timebar.remove();
     }
-    
-    if(hour < 800 || hour > 1800)
-      return;
+          console.log("hour " + hour);
+    if(hour < 0 || hour > 600 ) return;
+
     var startTimeToPixels = Math.ceil(hour / this.pixelToMinute);
     var timebarposition = new Vector2(this.startX-2, this.startY + startTimeToPixels);
+        console.log("writebar " + JSON.stringify(timebarposition));
+
     this.timebar  = new UI.Rect({
         size: new Vector2(this.width+4,2),
         backgroundColor : color,

@@ -72,9 +72,23 @@ var Functions = {
   },
   
   displayTimeBar : function(){
-    var now = new Date();
-    var timeNow = parseInt(""+now.getHours()+now.getMinutes());
-    DaysItem.displayTimeBar(this.timeline, timeNow, 'red');
+    var now = new Date();    
+    var start_time ="800";
+    var end_time =""+now.getHours()+ (now.getMinutes()<10?'0':'') + now.getMinutes() ;
+    
+    var start_hour = start_time.slice(0, -2);
+    var start_minutes = start_time.slice(-2);
+    
+    var end_hour = end_time.slice(0, -2);
+    var end_minutes = end_time.slice(-2);
+    
+    var startDate = new Date(0,0,0,start_hour, start_minutes);
+    var endDate = new Date(0,0,0,end_hour, end_minutes);
+    
+    var millis = endDate - startDate;
+    var minutes = millis/1000/60;
+    
+    DaysItem.displayTimeBar(this.timeline, minutes, 'red');
   },
   
   deleteEvents : function() {
