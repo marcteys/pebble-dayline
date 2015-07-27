@@ -45,15 +45,28 @@ var Functions = {
     
   fetchEvents : function(data) {
     if(data.calendars.length !== null) {
+      //function to display base events layout
       for(var i = 0,  j = data.calendars.length; i < j ; i++) {
         for(var k = 0,  m = data.calendars[i].events.length; k < m; k++) {
           if(data.calendars[i].events[k].day < 0) { 
             data.calendars[i].events[k].duration =  data.calendars[i].events[k].duration + data.calendars[i].events[k].day;
             data.calendars[i].events[k].day = 0;
           }
-          DaysItem.createEvent(this.timeline, data.calendars[i].events[k], Settings.option('calendars')[i].color);
+          DaysItem.createEvent(this.timeline, data.calendars[i].events[k], Settings.option('calendars')[i].color, 0);
         }
-      }    
+      }
+      /*
+      //function for overlaping events
+      for(var i = 0,  j = data.calendars.length-1; i < j ; i++) {
+        for(var  k = 0,  m = data.calendars[i].events.length; k < m; k++) {
+          if(data.calendars[i].events[k].day < 0) { 
+            data.calendars[i].events[k].duration =  data.calendars[i].events[k].duration + data.calendars[i].events[k].day;
+            data.calendars[i].events[k].day = 0;
+          }
+          DaysItem.createEvent(this.timeline, data.calendars[i].events[k], Settings.option('calendars')[i].color, i+1);
+        }
+      }*/
+      
     }
     this.displayTimeBar();
   },

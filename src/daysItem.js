@@ -41,9 +41,10 @@ var DaysItem =  {
     return dayRect;
   },
 
-  createEvent : function(dayRect, data, color) {
+  createEvent : function(dayRect, data, color, overlapingEvents) {
     var that = this;
-    var eventWidth = this.width;
+    var overlapingDivision = overlapingEvents + 1 ;
+    var eventWidth = Math.floor(this.width/overlapingDivision);
     //TODO : Conter le nombre de calendrier, le passer dans data. On divise la largeur par le nombre de calendriers et on le décale en fonction de quel calendrier on est. 
     //If the event is all the d == 0ay
     if(data.allDay === true && 1===0) { // TODO : Visual cue for this function !!
@@ -61,11 +62,13 @@ var DaysItem =  {
     }
     else { // normal event case
  //     console.log(data.startTime);
+      var xPos = that.startX + (overlapingEvents * eventWidth); // in case of overlaping events
       var durationToPixels = Math.floor(data.duration / this.pixelToMinute); //always display at least 1px height
       var startTimeToPixels = Math.floor(data.startTime / this.pixelToMinute);
-      var eventPosition = new Vector2(that.startX, that.startY + startTimeToPixels);
+      var eventPosition = new Vector2(xPos, that.startY + startTimeToPixels);
       var eventEnd = durationToPixels + eventPosition.y;
-
+      
+      
       if( eventEnd > this.startY + this.height) { // tim end
         var leftOver = eventEnd - (this.startY + this.height) ;
        durationToPixels -= leftOver;
@@ -93,7 +96,7 @@ var DaysItem =  {
     
     if(hour < 800 || hour > 1800)
       return;
-    var startTimeToPixels = Math.floor(hour / this.pixelToMinute);
+    var startTimeToPixels = Math.ceil(hour / this.pixelToMinute);
     var timebarposition = new Vector2(this.startX-2, this.startY + startTimeToPixels);
     this.timebar  = new UI.Rect({
         size: new Vector2(this.width+4,2),
