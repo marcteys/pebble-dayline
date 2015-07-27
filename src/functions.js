@@ -55,6 +55,13 @@ var Functions = {
         }
       }    
     }
+    this.displayTimeBar();
+  },
+  
+  displayTimeBar : function(){
+    var now = new Date();
+    var timeNow = parseInt(""+now.getHours()+now.getMinutes());
+    DaysItem.displayTimeBar(this.timeline, timeNow, 'red');
   },
   
   deleteEvents : function() {

@@ -42,10 +42,8 @@ var DayLineSettings = {
     if(Settings.option('weather')  !== undefined) {
       weather = Settings.option('weather');
       if(weather.type == "gps" && (Settings.option('gps')  !== undefined)) {
-
         var storedLocation = Settings.option('gps');
-                        console.log("w " + JSON.stringify(storedLocation));
-
+      // console.log("w " + JSON.stringify(storedLocation));
         weatherURL += "lat="+storedLocation.latitude+"&lon="+storedLocation.longitude+"";
       } else  if(weather.type == "location") {
         weatherURL += "q=" +  weather.city;
@@ -55,7 +53,7 @@ var DayLineSettings = {
       if(weather.unit === "f") weatherURL += "&units=imperial";
       if(weather.unit === "c") weatherURL += "&units=metric";
     }
-    console.log(weatherURL);
+  //  console.log(weatherURL);
     return weatherURL;
   },
   

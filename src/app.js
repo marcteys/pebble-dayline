@@ -1,14 +1,15 @@
 var UI = require('ui');
 var Settings = require('settings');
 var Wakeup = require('wakeup');
+var Clock = require('clock');
 
 var Functions = require('functions');
 var DayLineWatch = require('daylineWatch');
 var DayLineSettings = require('daylineSettings');
-//BUG : GPS NOT WORKING !
+// BUG : GPS NOT WORKING !
 // http://half4.com/cabble/cabble.php?page=settings&project=dayline&%7B%22gps%22%3A%7B%22longitude%22%3A-77.4875%2C%22latitude%22%3A39.0437%2C%22accuracy%22%3A1000%7D%7D&return_to=https%3A//cloudpebble.net/ide/emulator/config%3F#%7B%22gps%22%3A%7B%22longitude%22%3A-77.4875%2C%22latitude%22%3A39.0437%2C%22accuracy%22%3A1000%7D%7D
 // TODO : Timer refresh
-// TODO : Add calendar icon only 
+// TODO : Overlaping calendars 
 
 var App = {
   
@@ -42,20 +43,22 @@ var App = {
     var that = this;
     console.log("update calendar");
     Functions.getCalendar( DayLineSettings.getApiURL());
-    this.scheduleWakeup(15);
+    this.scheduleWakeup(15); // TODO : TO remove
     DayLineWatch.removeMessage(DayLineWatch.customMessage, 0);
-    
+
+    //WIP Launch Event
     var today = new Date();
     var newDateObj = new Date(today.getTime() + 1*60000);
     console.log('date ' +  newDateObj.getTime());
     //    number of seconds --------------------------^
- //   Wakeup.cancel('all');
-    this.scheduleWakeup(1);
+    Wakeup.cancel('all');
     console.log("Current date :" + today.getTime() +" , set date :" + newDateObj.getTime());
     Wakeup.schedule(
       {
         // Set the wakeup event for one minute from now
-        time: newDateObj.getTime()/*Date.now() / 1000 + 60*/,
+        //time: Date.now() / 1000 + 60,
+    //    time: newDateObj.getTime(),
+        time :  today.getTime() + 1000 * 60,
         data: { hello: 'world' }
       },
       function(e) {
@@ -66,16 +69,7 @@ var App = {
         }
       }
     );
-    
-  Wakeup.launch(function(e) {
-    if (e.wakeup) {
-      console.log('Woke up to ' + e.id + '! data: ' + JSON.stringify(e.data));
-      App.updateCalendar();
-    } else {
-      console.log('Regular launch not by a wakeup event.');
-    }
-  });
-  
+
   },
   
   initSettings : function() {
@@ -97,7 +91,6 @@ var App = {
           Settings.option('timeformat', e.options.timeformat);
           Settings.option('daytop', e.options.daytop);
           Settings.option('weather', e.options.weather);
-          
           // TODO : Not destroy everything !!
          // CabbleWatch.redrawBackground(e.options.background);
        //  Functions.deleteEvents();
@@ -119,7 +112,8 @@ var App = {
     /* 
     * Do not use setTimout // find an other solution
     * 
-    */ var that = this;
+    */
+    var that = this;
     this.refreshTimeout = setTimeout(function()  {
        Functions.deleteEvents();
        that.updateCalendar();
@@ -129,3 +123,14 @@ var App = {
 };
 this.exports = App;
 App.init();
+
+
+  Wakeup.launch(function(e) {
+    if (e.wakeup) {
+      console.log('Woke up to ' + e.id + '! data: ' + JSON.stringify(e.data));
+      App.updateCalendar();
+    } else {
+      console.log('Regular launch not by a wakeup event.');
+    }
+  });
+  
