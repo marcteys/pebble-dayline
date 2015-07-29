@@ -84,8 +84,8 @@ var Functions = {
       }*/
       
     }
-   // this.displayEventDescription(closestEventTime, closestEventText);
-    this.displayEventDescription("18:20pm", "RCA Workshop");
+   this.displayEventDescription(closestEventTime, closestEventText);
+  //  this.displayEventDescription("18:20pm", "RCA Workshop");
     this.displayTimeBar();
   },
   

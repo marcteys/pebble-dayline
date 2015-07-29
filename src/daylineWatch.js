@@ -98,7 +98,7 @@ var DayLineWatch = {
     }
     
     this.nextEventTitle =  new UI.Text ({
-      position: new Vector2(8, 125),
+      position: new Vector2(8, 120),
       size: new Vector2(110, 50),
       font: 'gothic-14-bold',
       textAlign : 'left',
@@ -108,7 +108,7 @@ var DayLineWatch = {
     this.window.add(this.nextEventTitle);
     
     this.nextEventText =  new UI.Text ({
-      position: new Vector2(8, 142),
+      position: new Vector2(8, 137),
       size: new Vector2(110, 50),
       font: 'gothic-14',
       textAlign : 'left',

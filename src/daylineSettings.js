@@ -32,6 +32,7 @@ var DayLineSettings = {
       }
     }
     apiUrl += '&days=1';
+    apiUrl += "&timeformat=" + this.getTimeFormat();
     apiUrl += '&callback=?';
     console.log(apiUrl);
     return apiUrl;
