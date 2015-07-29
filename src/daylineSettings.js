@@ -33,6 +33,7 @@ var DayLineSettings = {
     }
     apiUrl += '&days=1';
     apiUrl += '&callback=?';
+    console.log(apiUrl);
     return apiUrl;
   },
   

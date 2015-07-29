@@ -8,8 +8,9 @@ var DayLineWatch = {
   backgroundRect : null,
   rightBar : null,
   weatherText : null,
+  nextEventTitle : null,
+  nextEventText : null,
   colors : {},
-  customMessage : null,
   
   init: function(mainWindow, backgroundColor, dominantColor, textColor, timeFormat, dayTop) {
     var that = this;
@@ -48,7 +49,7 @@ var DayLineWatch = {
     
     if(dayTop) {
      var dayText =  new UI.TimeText ({
-        position: new Vector2(6, 4),
+        position: new Vector2(8, 4),
         size: new Vector2(50, 30),
         font: 'gothic-18-bold',
         text: '%a %d',
@@ -78,10 +79,9 @@ var DayLineWatch = {
       this.weatherText.remove();
     }
     var that = this;
-    console.log("Display weather");
     this.weatherText =  new UI.TimeText ({
-      position: new Vector2(6, 23),
-      size: new Vector2(114, 30),
+      position: new Vector2(8, 23),
+      size: new Vector2(110, 30), // 114 - 30
       font: 'gothic-18',
       text: weatherText,
       textAlign : 'left',
@@ -90,33 +90,41 @@ var DayLineWatch = {
     this.window.add(this.weatherText);
   },
   
-  displayMessage : function(message) {
+  displayNextEventDetail : function(title, message) {
     var that = this;
+    if(this.nextEventText !== null) {
+      this.nextEventTitle.remove();
+      this.nextEventText.remove();
+    }
     
-    this.removeMessage(this.customMessage, 400);
-    var messagePos = new Vector2(-144, 110);
-    this.customMessage =  new UI.Text ({
-      position: messagePos,
-      size: new Vector2(114, 50),
-      font: 'gothic-18',
-      textAlign : 'center',
+    this.nextEventTitle =  new UI.Text ({
+      position: new Vector2(8, 125),
+      size: new Vector2(110, 50),
+      font: 'gothic-14-bold',
+      textAlign : 'left',
+      text: title,
+      color : that.colors.textColor
+    });
+    this.window.add(this.nextEventTitle);
+    
+    this.nextEventText =  new UI.Text ({
+      position: new Vector2(8, 142),
+      size: new Vector2(110, 50),
+      font: 'gothic-14',
+      textAlign : 'left',
       text: message,
       color : that.colors.textColor
     });
-    this.window.add(this.customMessage);
+    this.window.add(this.nextEventText);
     
-    messagePos.x = 0;
-    this.customMessage.animate('position', messagePos, 400);
   },
   
-  removeMessage : function(element, speed){
-   if(element) {
-     var pos = element.position();
-     pos.x = 144;
-     element.animate('position', pos, 400).queue(function() {
-       element.remove();
-     });
-   } 
+  removeNextEventDetail : function()
+  {
+    if(this.nextEventText !== null) {
+      this.nextEventTitle.remove();
+      this.removeMessage(this.nextEventText, 400);
+    }    
   },
   
   

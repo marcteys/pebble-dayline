@@ -21,7 +21,7 @@ var App = {
     this.initSettings();
     
     if(Settings.option('refresh_token') === undefined) {
-      DayLineWatch.displayMessage("Open Pebble app to setup.");
+      DayLineWatch.displayNextEventDetail("Error","Open Pebble app to setup.");
     } else {
       this.initCalendar();
     }
@@ -42,7 +42,7 @@ var App = {
     console.log("update calendar");
     Functions.getCalendar( DayLineSettings.getApiURL());
   //  this.scheduleWakeup(2); // TODO : TO remove
-    DayLineWatch.removeMessage(DayLineWatch.customMessage, 0);
+   // DayLineWatch.displayNextEventDetail("DayLineWatch.customMessage, 0");
 
     //WIP Launch Event
     var today = new Date();
@@ -73,7 +73,6 @@ var App = {
   initSettings : function() {
     var that = this;
     DayLineSettings.setLocalisation();
-  //  that.displayMessage("waiting for update");
     DayLineWatch.updateWeatherText("Select a city");
     Settings.config(
       { url: DayLineSettings.getSettingsURL() },
@@ -95,6 +94,8 @@ var App = {
        //  that.initCalendar();
           that.destroy();
           that.init();
+          
+          DayLineWatch.displayNextEventDetail("At 10:30", "CH Blois - Blois");
         }
       }
     );
