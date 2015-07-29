@@ -50,7 +50,8 @@ var DayLineWatch = {
     if(dayTop) {
      var dayText =  new UI.TimeText ({
         position: new Vector2(8, 4),
-        size: new Vector2(50, 30),
+        size: new Vector2(107, 18),
+        textOverflow : 'ellipsis',
         font: 'gothic-18-bold',
         text: '%a %d',
         textAlign : 'left',
@@ -81,10 +82,11 @@ var DayLineWatch = {
     var that = this;
     this.weatherText =  new UI.TimeText ({
       position: new Vector2(8, 23),
-      size: new Vector2(110, 30), // 114 - 30
+      size: new Vector2(107, 18), // 114 - 30
       font: 'gothic-18',
       text: weatherText,
       textAlign : 'left',
+      textOverflow : 'ellipsis',
       color : that.colors.textColor
     });
     this.window.add(this.weatherText);
@@ -98,8 +100,8 @@ var DayLineWatch = {
     }
     
     this.nextEventTitle =  new UI.Text ({
-      position: new Vector2(8, 120),
-      size: new Vector2(110, 50),
+      position: new Vector2(8, 123),
+      size: new Vector2(107, 50),
       font: 'gothic-14-bold',
       textAlign : 'left',
       text: title,
@@ -108,11 +110,12 @@ var DayLineWatch = {
     this.window.add(this.nextEventTitle);
     
     this.nextEventText =  new UI.Text ({
-      position: new Vector2(8, 137),
-      size: new Vector2(110, 50),
+      position: new Vector2(8, 140),
+      size: new Vector2(107, 15), // 110, 50
       font: 'gothic-14',
       textAlign : 'left',
       text: message,
+      textOverflow : 'ellipsis',
       color : that.colors.textColor
     });
     this.window.add(this.nextEventText);
