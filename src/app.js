@@ -1,8 +1,6 @@
 var UI = require('ui');
 var Settings = require('settings');
 var Wakeup = require('wakeup');
-var Clock = require('clock');
-
 var Functions = require('functions');
 var DayLineWatch = require('daylineWatch');
 var DayLineSettings = require('daylineSettings');
@@ -96,8 +94,6 @@ var App = {
        //  that.initCalendar();
           that.destroy();
           that.init();
-          
-          DayLineWatch.displayNextEventDetail("At 10:30", "CH Blois - Blois");
         }
       }
     );

@@ -118,6 +118,7 @@ var DaysItem =  {
          console.log(e);
          } 
       }
+      console.log("Clear all events");
       this.eventsGraphic = [];
     }
   },

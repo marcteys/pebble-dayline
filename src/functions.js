@@ -2,6 +2,8 @@ var ajax = require('ajax');
 var DaysItem = require('daysItem');
 var Settings = require('settings');
 var DayLineWatch = require('daylineWatch');
+var DayLineEvents = require('daylineEvents');
+var Utils = require('utils');
 
 var Functions = {
   
@@ -44,16 +46,14 @@ var Functions = {
     //                                                                         ^-- data.weather[0].description 
   },
   
-  displayEventDescription : function(hour, description) {
-    //do some stuff with the "hour" variable
-     DayLineWatch.displayNextEventDetail(hour, description);
-  },
-    
   fetchEvents : function(data) {
     
-    var closestEventTime = 480;
+    var now = new Date();
+    var relativeTime = null;
+    var closestEventTime = 120; // don't diplay events above 120minutes
     var closestEventTimeFormat = "";
     var closestEventText = "";
+    var closestEventDate = null;
     
     if(data.calendars.length !== null) {
       //function to display base events layout
@@ -63,10 +63,12 @@ var Functions = {
             data.calendars[i].events[k].duration = data.calendars[i].events[k].duration + data.calendars[i].events[k].day;
             data.calendars[i].events[k].day = 0;
           }
-          if( data.calendars[i].events[k].startTime < closestEventTime) {
+          relativeTime = Utils.differenceBetweenDates(now, Date.parse(data.calendars[i].events[k].startDate));
+          if(relativeTime < closestEventTime ) {
             closestEventText = data.calendars[i].events[k].description;
-            closestEventTime = data.calendars[i].events[k].startTime; //.niceStartTime
-            closestEventTimeFormat =  data.calendars[i].events[k].niceStartTime;
+            closestEventTime = relativeTime; //.niceStartTime
+            closestEventTimeFormat = data.calendars[i].events[k].niceStartTime;
+            closestEventDate = Date.parse(data.calendars[i].events[k].startDate);
           }
           DaysItem.createEvent(this.timeline, data.calendars[i].events[k], Settings.option('calendars')[i].color, 0);
         }
@@ -84,10 +86,8 @@ var Functions = {
       }*/
       
     }
-    
-    //TODO : Send a timestanmp, use daylineEvents to display events, refresh automatically etc
-   this.displayEventDescription(closestEventTimeFormat, closestEventText);
-  //  this.displayEventDescription("18:20pm", "RCA Workshop");
+    console.log("closestEventDate, closestEventTimeFormat, closestEventText" + closestEventDate, closestEventTimeFormat, closestEventText );
+   DayLineEvents.displayEventDescription(closestEventDate, closestEventTimeFormat, closestEventText);
     this.displayTimeBar();
   },
   
