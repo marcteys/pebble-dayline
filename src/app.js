@@ -28,7 +28,7 @@ var App = {
   },
   
   initCalendar : function() {
-    Functions.initDays(DayLineSettings.getDayFormat(),DayLineSettings.getBackgroundColor());
+    Functions.initDays(DayLineSettings.getDayFormat(),DayLineSettings.getBackgroundColor(),DayLineSettings.getStartHour(),DayLineSettings.getEndHour());
     this.updateCalendar();
     this.updateWeather();
   },
@@ -88,6 +88,8 @@ var App = {
           Settings.option('timeformat', e.options.timeformat);
           Settings.option('daytop', e.options.daytop);
           Settings.option('weather', e.options.weather);
+          Settings.option('starthour', e.options.starthour);
+          Settings.option('endhour', e.options.endhour);
           // TODO : Not destroy everything !!
          // CabbleWatch.redrawBackground(e.options.background);
        //  Functions.deleteEvents();

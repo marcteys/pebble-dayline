@@ -1,22 +1,26 @@
 var UI = require('ui');
 var Vector2 = require('vector2');
+var Utils = require('utils');
 
 var DaysItem =  {
-  // One day : From 8am to 6PM, 1 hour = 4px;
-  // 11 minutes = 1px
+
   height: 112,
   width:9,
   startX: 125,
   startY : 42,
+  startHour : null,
+  endHour : null,
   rowMargin : 2,
   mainWidow : null,
   pixelToMinute : null,
   eventsGraphic : [],
   timebar : null,
   
-  init : function(mainWindow,  backgroundColor) {
-    this.pixelToMinute = 600/(this.height);
-    
+  init : function(mainWindow,  backgroundColor, startHourDate, endHourDate) {
+    this.startHour = startHourDate;
+    this.endHour = endHourDate;
+    this.pixelToMinute = Utils.differenceBetweenDates(endHourDate,startHourDate)/(this.height);
+
     var that = this;
     var dayBorder = new UI.Rect({
       size: new Vector2(that.width+8, that.height+8),
@@ -40,12 +44,16 @@ var DaysItem =  {
     
     return dayRect;
   },
-
+  
+  setDaysItemVariables  : function() {
+    
+  },
+  
   createEvent : function(dayRect, data, color, overlapingEvents) {
     var that = this;
     var overlapingDivision = overlapingEvents + 1 ;
     var eventWidth = Math.floor(this.width/overlapingDivision);
-    //TODO : Conter le nombre de calendrier, le passer dans data. On divise la largeur par le nombre de calendriers et on le décale en fonction de quel calendrier on est. 
+
     //If the event is all the d == 0ay
     if(data.allDay === true && 1===0) { // TODO : Visual cue for this function !!
       if(data.duration + data.day > 7) data.duration = 7 - data.day;
@@ -60,22 +68,14 @@ var DaysItem =  {
         this.mainWindow.add(rectDayEvent);
       }
     }
-    else { // normal event case
-      console.log(data.startTime);
+    else { 
       var xPos = that.startX + (overlapingEvents * eventWidth); // in case of overlaping events
-      var durationToPixels = Math.floor(data.duration / this.pixelToMinute); //always display at least 1px height
-      var startTimeToPixels = Math.floor(data.startTime / this.pixelToMinute);
+      var durationToPixels = Math.round(data.duration / this.pixelToMinute); //always display at least 1px height
+      var eventStartMinutes = Utils.differenceBetweenDates(this.startHour,Date.parse(data.startDate));
+      var startTimeToPixels = Math.round(eventStartMinutes / this.pixelToMinute);
       var eventPosition = new Vector2(xPos, that.startY + startTimeToPixels);
-      var eventEnd = durationToPixels + eventPosition.y;
       
-      
-      if( eventEnd > this.startY + this.height) { // tim end
-        var leftOver = eventEnd - (this.startY + this.height) ;
-       durationToPixels -= leftOver;
-      }
-    
       var rectEvent = new UI.Rect({
-        //size: new Vector2(eventWidth,0),
         size: new Vector2(eventWidth ,durationToPixels),
         backgroundColor : color,
         position: eventPosition
@@ -83,24 +83,23 @@ var DaysItem =  {
       this.eventsGraphic.push(rectEvent);
       this.mainWindow.add(rectEvent);
       
-      //rectEvent.animate('size', new Vector2(eventWidth,durationToPixels), 0);
-      // TODO : change the value  --------------------------------------- ^ 
     }
   },
   
-  displayTimeBar : function(dayRect, hour, color) {
-    hour = parseInt(hour);
+  displayTimeBar : function(dayRect, color) {
     if(this.timebar !== null) {
-      console.log("delete timebar");
       this.timebar.remove();
     }
-          console.log("hour " + hour);
-    if(hour < 0 || hour > 600 ) return;
-
-    var startTimeToPixels = Math.ceil(hour / this.pixelToMinute);
+    var now = new Date();
+    if(now.getHours() < this.startHour.getHours()  || now.getHours() > this.endHour.getHours() ) {    
+      if(this.timebar !== null) {
+        this.timebar.remove();
+      }
+      return;
+    }
+    var barStartMinute = Utils.differenceBetweenDates(this.startHour,now);
+    var startTimeToPixels = Math.round(barStartMinute / this.pixelToMinute);
     var timebarposition = new Vector2(this.startX-2, this.startY + startTimeToPixels);
-        console.log("writebar " + JSON.stringify(timebarposition));
-
     this.timebar  = new UI.Rect({
         size: new Vector2(this.width+4,2),
         backgroundColor : color,

@@ -33,6 +33,8 @@ var DayLineSettings = {
     }
     apiUrl += '&days=1';
     apiUrl += "&timeformat=" + this.getTimeFormat();
+    apiUrl += "&starthour=" + this.getStartHour().getHours();
+    apiUrl += "&endhour=" + this.getEndHour().getHours();
     apiUrl += '&callback=?';
     console.log(apiUrl);
     return apiUrl;
@@ -111,6 +113,25 @@ var DayLineSettings = {
     var dayTop = true;
     if(Settings.option('daytop')  !== undefined) dayTop = Settings.option('daytop');
     return dayTop;
+  },
+  
+  getStartHour : function()
+  {
+    var startHour = '8';
+    if(Settings.option('starthour')  !== undefined) startHour = Settings.option('starthour');
+    
+    var d = new Date();
+    d.setHours(startHour,0,0,0);
+    return d;
+  },
+  
+  getEndHour : function() {
+   var endHour = '18';
+    if(Settings.option('endhour')  !== undefined) endHour = Settings.option('endhour');
+    
+    var d = new Date();
+    d.setHours(endHour,0,0,0);
+    return d;
   }
 
 };
