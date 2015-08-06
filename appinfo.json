@@ -43,6 +43,7 @@
     "versionCode": 1,
     "versionLabel": "0.1",
     "watchapp": {
+        "hiddenApp": false,
         "watchface": true
     }
 }

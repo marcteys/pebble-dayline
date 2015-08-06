@@ -80,8 +80,11 @@ var DaysItem =  {
         backgroundColor : color,
         position: eventPosition
       });
+      
       this.eventsGraphic.push(rectEvent);
-      this.mainWindow.add(rectEvent);
+      if(data.allDay === true && this.eventsGraphic.length > 0) this.mainWindow.insert(this.eventsGraphic[0].index(),rectEvent); // insert a allday event before every other 
+      else this.mainWindow.add(rectEvent);
+
       
     }
   },
