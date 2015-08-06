@@ -95,7 +95,7 @@ var App = {
           Settings.option('endhour', e.options.endhour);
           // TODO : Not destroy everything !!
          // CabbleWatch.redrawBackground(e.options.background);
-       //  Functions.deleteEvents();
+         Functions.deleteEvents();
        //  that.initCalendar();
           that.destroy();
           that.init();
@@ -104,11 +104,12 @@ var App = {
     );
   },
   
-  destroy: function(time) {
+  destroy: function(callback) {
     console.log("Destroy app");
    this.mainWindow.each(function(element) {
      element.remove();
    });
+        console.log("Destroyed");
   },
 
   scheduleWakeup: function(time) {
@@ -116,11 +117,12 @@ var App = {
     * Do not use setTimout // find an other solution
     * 
     */
+    /*
     var that = this;
     this.refreshTimeout = setTimeout(function()  {
        Functions.deleteEvents();
        that.updateCalendar();
-    }, (time * 60000) / 6 );
+    }, (time * 60000) / 6 );*/
   },
 
 };

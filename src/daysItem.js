@@ -80,10 +80,15 @@ var DaysItem =  {
         backgroundColor : color,
         position: eventPosition
       });
-      
-      this.eventsGraphic.push(rectEvent);
-      if(data.allDay === true && this.eventsGraphic.length > 0) this.mainWindow.insert(this.eventsGraphic[0].index(),rectEvent); // insert a allday event before every other 
+
+      if(data.allDay === true && this.eventsGraphic.length > 0) {
+        console.log("!!! creating a event all day. Lenght of event graphic : " +  this.eventsGraphic.length);
+        console.log("!!! creating a event all day.  event index : " +  this.eventsGraphic[0].index());
+        this.mainWindow.insert(this.eventsGraphic[0].index(),rectEvent); // insert a allday event before every other 
+      }
       else this.mainWindow.add(rectEvent);
+      this.eventsGraphic.push(rectEvent);
+      console.log("index : " + rectEvent.index());
 
       
     }
@@ -118,7 +123,7 @@ var DaysItem =  {
            this.eventsGraphic[i].remove();
            this.eventsGraphic.splice(i, 1);
          } catch(e) {
-         console.log(e);
+           console.log("Impossible to delete " + e);
          } 
       }
       console.log("Clear all events");
