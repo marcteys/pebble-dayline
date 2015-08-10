@@ -55,14 +55,13 @@ var DaysItem =  {
     var eventWidth = Math.floor(this.width/overlapingDivision);
 
     //If the event is all the d == 0ay
-    if(data.allDay === true && 1===0) { // TODO : Visual cue for this function !!
+    if(data.allDay === true) { // TODO : Visual cue for this function !!
       if(data.duration + data.day > 7) data.duration = 7 - data.day;
       for(var i = 0,  j=data.duration; i < j ; i++) {
-        var dayEventPosition = new Vector2(that.startX + (that.width + that.margin)   , that.startHeight - 4);
         var rectDayEvent = new UI.Rect({
-          size: new Vector2(eventWidth,2),
+          size: new Vector2(2,this.height),
           backgroundColor : color,
-          position: dayEventPosition
+          position: new Vector2(this.startX, this.startY)
         });
         this.eventsGraphic.push(rectDayEvent);
         this.mainWindow.add(rectDayEvent);
@@ -88,9 +87,6 @@ var DaysItem =  {
       }
       else this.mainWindow.add(rectEvent);
       this.eventsGraphic.push(rectEvent);
-      console.log("index : " + rectEvent.index());
-
-      
     }
   },
   

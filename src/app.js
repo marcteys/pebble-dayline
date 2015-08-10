@@ -11,6 +11,14 @@ var DayLineSettings = require('daylineSettings');
 // When it' a regular wakeup, destroy only the events on the right,
 // at the end of the ajax getCalendar is loaded.
 
+/*TODO Overlaping events 
+Calculer les overlaping events directement 
+Utiliser une fonction dans Utils. 
+http://stackoverflow.com/questions/22784883/check-if-more-than-two-date-ranges-overlap
+Pour cahque overla^ping event, créer un novueau petit en JS, qui prend la date de début d'overlaping, la date de fin d'overlaping et la couleur de l'event (+allDay = false)
+Ne pas faire d'overlaping quand l'event est allday ? A tester ! (peut etre que ça marche quand même, avec l'évènement au fond)
+Pour débug : Tracer le timestamp en console.log() au début du process et a la fin, voir combien de temps ça prend. 
+*/
 
 var App = {
   
