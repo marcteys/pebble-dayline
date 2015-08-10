@@ -1,34 +1,35 @@
 var Utils =  {
   
   differenceBetweenDates : function(date1,date2) {
-    var diff = Math.abs(date1 -date2);
+    var diff = Math.abs(date1 - date2);
     var minutes = Math.floor((diff/1000)/60);
+    console.log("differenceBetweenDates : date1  " + date1  + " - date 2 " +  date2 + " - duration " + minutes );
     return minutes;
   },
   
-  calculateOverlapingEvent : function(a_start, a_duration, b_start, b_duration) {
-    var a_end = this.dateAdd(a_start,'minute', a_duration);
-    var b_end = this.dateAdd(b_start,'minute', b_duration);
+  calculateOverlapingEvent : function(a_start, a_end, b_start, b_end) {
     var n_start = null;
     var n_end = null;
-
-    //var newEnd = new Date(newBegin + oldEnd - oldBegin);
     var newEvent = false;
 
+    //TODO : Handle more exeptions
     if (a_start <= b_start && b_start <= a_end) {  // b starts in a
       n_start = b_start;
-      n_end = b_start;
+      n_end = b_end;
+      console.log("calculateOverlapingEvent a");
     }
     if (a_start <= b_end && b_end <= a_end) { // b ends in a
       n_start = b_start;
       n_end = b_end;
+      console.log("calculateOverlapingEvent d");
     }
-    if (b_start <  a_start && a_end   <  b_end){ // a in b
+    if (b_start <  a_start && a_end < b_end){ // a in b
       n_start = a_start;
       n_end = a_end ;
+      console.log("calculateOverlapingEvent c");
     }
-    console.log("Utils.calculateOverlapingEvent : " +  a_start + a_end + b_start + b_end + n_start + n_end);
-    if(n_start !== null && n_end !== null) newEvent = {start:n_start, end : n_end, duration : this.differenceBetweenDates(n_start,n_end)};
+    
+    if(n_start !== null && n_end !== null) newEvent = {start:n_start, end : n_end, duration : this.differenceBetweenDates(n_start,n_end) };
     
     return newEvent;
   },
@@ -47,7 +48,7 @@ var Utils =  {
       case 'second' :  ret.setTime(ret.getTime() + units*1000);  break;
       default       :  ret = undefined;  break;
     }
-    return ret;
+    return Date.parse(ret);
   }
   
 };

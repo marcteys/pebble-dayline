@@ -10,7 +10,6 @@ var DayLineSettings = require('daylineSettings');
 // TODO : When Settings. is closed, refresh the app with destroy.
 // When it' a regular wakeup, destroy only the events on the right,
 // at the end of the ajax getCalendar is loaded.
-
 /*TODO Overlaping events 
 Calculer les overlaping events directement 
 Utiliser une fonction dans Utils. 
@@ -56,6 +55,7 @@ var App = {
    // DayLineWatch.displayNextEventDetail("DayLineWatch.customMessage, 0");
 
     //WIP Launch Event
+    /*
     var today = new Date();
     var newDateObj = new Date(today.getTime() + 1*60000);
     console.log('date ' +  newDateObj.getTime());
@@ -78,7 +78,7 @@ var App = {
         }
       }
     );
-
+*/
   },
   
   initSettings : function() {

@@ -50,6 +50,8 @@ var DaysItem =  {
   },
   
   createEvent : function(dayRect, data, color, overlapingEvents) {
+    console.log("create event overlaping ? "  +JSON.stringify(data) );
+    
     var that = this;
     var overlapingDivision = overlapingEvents + 1 ;
     var eventWidth = Math.floor(this.width/overlapingDivision);
@@ -68,9 +70,9 @@ var DaysItem =  {
       }
     }
     else { 
-      var xPos = that.startX + (overlapingEvents * eventWidth); // in case of overlaping events
+      var xPos = that.startX + (overlapingEvents * eventWidth /* / overlapingEvents */ ); // in case of overlaping events
       var durationToPixels = Math.round(data.duration / this.pixelToMinute); //always display at least 1px height
-      var eventStartMinutes = Utils.differenceBetweenDates(this.startHour,Date.parse(data.startDate));
+      var eventStartMinutes = Utils.differenceBetweenDates(this.startHour,new Date(data.startDate));
       var startTimeToPixels = Math.round(eventStartMinutes / this.pixelToMinute);
       var eventPosition = new Vector2(xPos, that.startY + startTimeToPixels);
       
@@ -81,8 +83,8 @@ var DaysItem =  {
       });
 
       if(data.allDay === true && this.eventsGraphic.length > 0) {
-        console.log("!!! creating a event all day. Lenght of event graphic : " +  this.eventsGraphic.length);
-        console.log("!!! creating a event all day.  event index : " +  this.eventsGraphic[0].index());
+        //console.log("!!! creating a event all day. Lenght of event graphic : " +  this.eventsGraphic.length);
+        //console.log("!!! creating a event all day.  event index : " +  this.eventsGraphic[0].index());
         this.mainWindow.insert(this.eventsGraphic[0].index(),rectEvent); // insert a allday event before every other 
       }
       else this.mainWindow.add(rectEvent);
@@ -95,7 +97,7 @@ var DaysItem =  {
       this.timebar.remove();
     }
     var now = new Date();
-    if(now.getHours() < this.startHour.getHours()  || now.getHours() > this.endHour.getHours() ) {    
+    if(now < this.startHour || now > this.endHour ) {    
       if(this.timebar !== null) {
         this.timebar.remove();
       }

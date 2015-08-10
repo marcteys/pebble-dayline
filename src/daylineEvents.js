@@ -10,7 +10,7 @@ var DaylineEvents =  {
   
   displayEventDescription : function(date, niceFormat, description)
   {
-    console.log(niceFormat + " + " + description);
+   // console.log(niceFormat + " + " + description);
     var timeFormatted = this.formatTimeText(date, niceFormat);
      DayLineWatch.displayNextEventDetail(timeFormatted, description);
   },

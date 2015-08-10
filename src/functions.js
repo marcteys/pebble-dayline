@@ -64,23 +64,24 @@ var Functions = {
             data.calendars[i].events[k].day = 0;
           }
           //Get the closest event;
-          relativeTime = Utils.differenceBetweenDates(now, Date.parse(data.calendars[i].events[k].startDate));
+          console.log(now + " + "+ new Date(data.calendars[i].events[k].startDate));
+          relativeTime = Utils.differenceBetweenDates(now, new Date(data.calendars[i].events[k].startDate));
           if(relativeTime < closestEventTime ) {
             closestEventText = data.calendars[i].events[k].description;
             closestEventTime = relativeTime;
             closestEventTimeFormat = data.calendars[i].events[k].niceStartTime;
-            closestEventDate = Date.parse(data.calendars[i].events[k].startDate);
+            closestEventDate = new Date(data.calendars[i].events[k].startDate);
           }
-          DaysItem.createEvent(this.timeline, data.calendars[i].events[k], Settings.option('calendars')[i].color, 0);
-
-          var startDate = Date.parse(data.calendars[i].events[k].startDate);
-          var endDate = Date.parse(data.calendars[i].events[k].endDate);
+         DaysItem.createEvent(this.timeline, data.calendars[i].events[k], Settings.option('calendars')[i].color, 0);
+          
+          var startDate = new Date(data.calendars[i].events[k].startDate);
+          var endDate = new Date(data.calendars[i].events[k].endDate);
           //Loop again to check if the date is overlaping
            for(var i2 = 0; i2 < j ; i2++) {
             for(var k2 = 0; k2 < data.calendars[i2].events.length; k2++) {
               if(i !== i2 && k !== k2) { // if it's not the same event
                 var overlapingCount = 0;
-                var overlaping = Utils.calculateOverlapingEvent(startDate,endDate, Date.parse(data.calendars[i2].events[k2].startDate), Date.parse(data.calendars[i2].events[k2].endDate));
+                var overlaping = Utils.calculateOverlapingEvent(startDate,endDate, new Date(data.calendars[i2].events[k2].startDate), new Date(data.calendars[i2].events[k2].endDate));
                 if(overlaping !== false) {
                   overlapingCount++;
                   var newEvent = data.calendars[i2].events[k2];
