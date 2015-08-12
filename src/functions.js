@@ -40,7 +40,6 @@ var Functions = {
   },
   
   displayWeather : function(data) {
-   // console.log(JSON.stringify(data));
     if(data.cod === "404") DayLineWatch.updateWeatherText("No city found");
     else  DayLineWatch.updateWeatherText(Math.round(parseInt(data.main.temp)) + "°- " + data.weather[0].main);
     //                                                                         ^-- data.weather[0].description 
@@ -54,6 +53,7 @@ var Functions = {
     var closestEventTimeFormat = "";
     var closestEventText = "";
     var closestEventDate = null;
+    var hasFullDayEvent = false;
     
     if(data.calendars.length !== null) {
       //function to display base events layout
@@ -64,7 +64,6 @@ var Functions = {
             data.calendars[i].events[k].day = 0;
           }
           //Get the closest event;
-          console.log(now + " + "+ new Date(data.calendars[i].events[k].startDate));
           relativeTime = Utils.differenceBetweenDates(now, new Date(data.calendars[i].events[k].startDate));
           if(relativeTime < closestEventTime ) {
             closestEventText = data.calendars[i].events[k].description;
@@ -73,7 +72,8 @@ var Functions = {
             closestEventDate = new Date(data.calendars[i].events[k].startDate);
           }
          DaysItem.createEvent(this.timeline, data.calendars[i].events[k], Settings.option('calendars')[i].color, 0);
-          
+         if(!hasFullDayEvent && data.calendars[i].events[k].allDay === true) hasFullDayEvent = true;
+
           var startDate = new Date(data.calendars[i].events[k].startDate);
           var endDate = new Date(data.calendars[i].events[k].endDate);
           //Loop again to check if the date is overlaping
@@ -89,17 +89,19 @@ var Functions = {
                   newEvent.endDate = overlaping.end;
                   newEvent.duration = overlaping.duration;
                   console.log("event overlaping : " + newEvent.description );
-                  DaysItem.createEvent(this.timeline, newEvent, Settings.option('calendars')[i2].color, 1);
+                  
+                  // TODO : Ne pas dessiner direct le rectangle mais le stocker dans un array, et compter si cet event possède d'autres events overlaping. 
+                  DaysItem.createEvent(this.timeline, newEvent, "black" /* Settings.option('calendars')[i].color */, 1);
                 }
               }
             }
           }
         }
-      }
-      
+      }      
     }
-    console.log("closestEventDate, closestEventTimeFormat, closestEventText" + closestEventDate, closestEventTimeFormat, closestEventText );
+    
     DayLineEvents.displayEventDescription(closestEventDate, closestEventTimeFormat, closestEventText);
+    if(!hasFullDayEvent) DaysItem.removeAllDayBox();
     this.displayTimeBar(); // TODO : Move that somewhere else
   },
   

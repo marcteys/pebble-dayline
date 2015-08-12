@@ -15,7 +15,7 @@ var Utils =  {
     //TODO : Handle more exeptions
     if (a_start <= b_start && b_start <= a_end) {  // b starts in a
       n_start = b_start;
-      n_end = b_end;
+      n_end = a_end;
       console.log("calculateOverlapingEvent a");
     }
     if (a_start <= b_end && b_end <= a_end) { // b ends in a

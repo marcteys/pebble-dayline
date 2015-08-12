@@ -14,6 +14,8 @@ var DaysItem =  {
   mainWidow : null,
   pixelToMinute : null,
   eventsGraphic : [],
+  alldayBoxBorder : null,
+  alldayBoxContent :null,
   timebar : null,
   
   init : function(mainWindow,  backgroundColor, startHourDate, endHourDate) {
@@ -45,8 +47,35 @@ var DaysItem =  {
     return dayRect;
   },
   
-  setDaysItemVariables  : function() {
+  
+  displayAllDayBox : function()
+  {
+    var that = this;
+    this.alldayBoxBorder  = new UI.Rect({
+      size: new Vector2(that.width+8, 4),
+      position: new Vector2(that.startX-4, that.startY-8),
+      backgroundColor : 'black'
+    });
     
+    this.alldayBoxContent = new UI.Rect({
+      size: new Vector2(that.width+4, 2),
+      position: new Vector2(that.startX-2, that.startY-6),
+      backgroundColor : 'white'
+    });
+    
+    this.mainWindow.add(this.alldayBoxBorder);
+    this.mainWindow.add(this.alldayBoxContent);
+
+  },
+  
+  removeAllDayBox : function()
+  {
+   if(this.alldayBoxBorder !== null) {
+      this.alldayBoxContent.remove();
+      this.alldayBoxBorder.remove();
+     this.alldayBoxContent = null;
+     this.alldayBoxBorder = null;
+    }    
   },
   
   createEvent : function(dayRect, data, color, overlapingEvents) {
@@ -58,12 +87,12 @@ var DaysItem =  {
 
     //If the event is all the d == 0ay
     if(data.allDay === true) { // TODO : Visual cue for this function !!
-      if(data.duration + data.day > 7) data.duration = 7 - data.day;
+      if(this.alldayBoxContent === null) this.displayAllDayBox();
       for(var i = 0,  j=data.duration; i < j ; i++) {
         var rectDayEvent = new UI.Rect({
-          size: new Vector2(2,this.height),
-          backgroundColor : color,
-          position: new Vector2(this.startX, this.startY)
+          size: new Vector2(that.width+4, 2),
+          position: new Vector2(that.startX-2, that.startY-6),
+          backgroundColor : color
         });
         this.eventsGraphic.push(rectDayEvent);
         this.mainWindow.add(rectDayEvent);
@@ -81,13 +110,8 @@ var DaysItem =  {
         backgroundColor : color,
         position: eventPosition
       });
-
-      if(data.allDay === true && this.eventsGraphic.length > 0) {
-        //console.log("!!! creating a event all day. Lenght of event graphic : " +  this.eventsGraphic.length);
-        //console.log("!!! creating a event all day.  event index : " +  this.eventsGraphic[0].index());
-        this.mainWindow.insert(this.eventsGraphic[0].index(),rectEvent); // insert a allday event before every other 
-      }
-      else this.mainWindow.add(rectEvent);
+      
+      this.mainWindow.add(rectEvent);
       this.eventsGraphic.push(rectEvent);
     }
   },

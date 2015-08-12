@@ -130,7 +130,5 @@ var DayLineWatch = {
     }    
   },
   
-  
-  
 };
 this.exports = DayLineWatch;
