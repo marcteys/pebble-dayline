@@ -132,6 +132,12 @@ var DayLineSettings = {
     var d = new Date();
     d.setHours(endHour,0,0,0);
     return d;
+  },
+  
+  getRefreshRate: function() {
+    var refresh = '120';
+    if(Settings.option('refreshrate')  !== undefined) refresh = Settings.option('refreshrate');
+    return refresh;
   }
 
 };

@@ -45,7 +45,14 @@ var DaylineEvents =  {
       
     }
     return stringText;
+  },
+  
+  createSchedule : function(time) {
+    if(onGoingWakeup !== null) Wakeup.cancel(onGoingWakeup);
+    // prepare the wakeup
+    
   }
+  
   
 };
 this.exports = DaylineEvents;

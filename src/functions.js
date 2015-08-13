@@ -47,6 +47,8 @@ var Functions = {
   
   fetchEvents : function(data) {
     
+    DaysItem.deleteEvents();
+    
     var now = new Date();
     var relativeTime = null;
     var closestEventTime = 120; // don't diplay events above 120minutes
@@ -58,28 +60,35 @@ var Functions = {
     if(data.calendars.length !== null) {
       //function to display base events layout
       for(var i = 0,  j = data.calendars.length; i < j ; i++) {
+        //TODO : if data.calendars[i].id == "overlaping", return
         for(var k = 0,  m = data.calendars[i].events.length; k < m; k++) {
-          if(data.calendars[i].events[k].day < 0) { 
-            data.calendars[i].events[k].duration = data.calendars[i].events[k].duration + data.calendars[i].events[k].day;
-            data.calendars[i].events[k].day = 0;
+          var event = data.calendars[i].events[k];
+          if(event.day < 0) { 
+            event.duration = event.duration + event.day;
+            event.day = 0;
           }
           //Get the closest event;
-          relativeTime = Utils.differenceBetweenDates(now, new Date(data.calendars[i].events[k].startDate));
+          relativeTime = Utils.differenceBetweenDates(now, new Date(event.startDate));
           if(relativeTime < closestEventTime ) {
-            closestEventText = data.calendars[i].events[k].description;
+            closestEventText = event.description;
             closestEventTime = relativeTime;
-            closestEventTimeFormat = data.calendars[i].events[k].niceStartTime;
-            closestEventDate = new Date(data.calendars[i].events[k].startDate);
+            closestEventTimeFormat = event.niceStartTime;
+            closestEventDate = new Date(event.startDate);
           }
-         DaysItem.createEvent(this.timeline, data.calendars[i].events[k], Settings.option('calendars')[i].color, 0);
-         if(!hasFullDayEvent && data.calendars[i].events[k].allDay === true) hasFullDayEvent = true;
-
-          var startDate = new Date(data.calendars[i].events[k].startDate);
-          var endDate = new Date(data.calendars[i].events[k].endDate);
+         DaysItem.createEvent(this.timeline, event, Settings.option('calendars')[i].color, 0);
+         if(!hasFullDayEvent && event.allDay === true) hasFullDayEvent = true;
+          
+          //Loop not at the good position...... do that at the end 
+          
+          // Easier and faster to do that in php ! 
+          
+          /*
+          var startDate = new Date(event.startDate);
+          var endDate = new Date(event.endDate);
           //Loop again to check if the date is overlaping
            for(var i2 = 0; i2 < j ; i2++) {
             for(var k2 = 0; k2 < data.calendars[i2].events.length; k2++) {
-              if(i !== i2 && k !== k2) { // if it's not the same event
+              if(i !== i2 && k !== k2 && !event.allDay && !data.calendars[i2].events[k2].allDay) { // if it's not the same event
                 var overlapingCount = 0;
                 var overlaping = Utils.calculateOverlapingEvent(startDate,endDate, new Date(data.calendars[i2].events[k2].startDate), new Date(data.calendars[i2].events[k2].endDate));
                 if(overlaping !== false) {
@@ -91,18 +100,18 @@ var Functions = {
                   console.log("event overlaping : " + newEvent.description );
                   
                   // TODO : Ne pas dessiner direct le rectangle mais le stocker dans un array, et compter si cet event possède d'autres events overlaping. 
-                  DaysItem.createEvent(this.timeline, newEvent, "black" /* Settings.option('calendars')[i].color */, 1);
+                  DaysItem.createEvent(this.timeline, newEvent, "black", 1);
                 }
               }
-            }
-          }
+            } 
+          }*/
         }
       }      
     }
     
     DayLineEvents.displayEventDescription(closestEventDate, closestEventTimeFormat, closestEventText);
     if(!hasFullDayEvent) DaysItem.removeAllDayBox();
-    this.displayTimeBar(); // TODO : Move that somewhere else
+    this.updateTimeBar(); // TODO : Move that somewhere else
   },
   
   displayTimeBar : function(){

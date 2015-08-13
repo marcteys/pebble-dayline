@@ -116,7 +116,7 @@ var DaysItem =  {
     }
   },
   
-  displayTimeBar : function(dayRect, color) {
+  updateTimeBar : function(dayRect, color) {
     if(this.timebar !== null) {
       this.timebar.remove();
     }
