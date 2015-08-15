@@ -136,9 +136,8 @@ var DaysItem =  {
         size: new Vector2(this.width+4,2),
         backgroundColor : "red",
         position: timebarposition
-      });
-     this.mainWindow.add(this.timebar);
-    console.log("add timebar : " + JSON.stringify(timebarposition));
+    });
+    this.mainWindow.add(this.timebar);
     
     this.timebarTimeout = setTimeout(function() { that.updateTimeBar(); },that.pixelToMinute * 60000 );
   },

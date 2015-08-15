@@ -65,7 +65,6 @@ var DayLineSettings = {
     var locationSuccess = function (pos) {
     var coordinates = pos.coords;
         console.log('location : ' + coordinates.latitude + ', ' + coordinates.longitude);
-        console.log("s " + JSON.stringify(pos.coords));
         Settings.option("gps", pos.coords);
     };
     var locationError = function (err) {

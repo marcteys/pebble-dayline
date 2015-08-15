@@ -1,9 +1,11 @@
+/* global clearTimeout */
 var UI = require('ui');
 var Settings = require('settings');
 var Functions = require('functions');
 var DayLineWatch = require('daylineWatch');
 var DayLineSettings = require('daylineSettings');
 // BUG : GPS NOT WORKING !
+// TODO : Callback on GS location found
 // http://half4.com/cabble/cabble.php?page=settings&project=dayline&%7B%22gps%22%3A%7B%22longitude%22%3A-77.4875%2C%22latitude%22%3A39.0437%2C%22accuracy%22%3A1000%7D%7D&return_to=https%3A//cloudpebble.net/ide/emulator/config%3F#%7B%22gps%22%3A%7B%22longitude%22%3A-77.4875%2C%22latitude%22%3A39.0437%2C%22accuracy%22%3A1000%7D%7D
 
 var App = {
@@ -34,7 +36,7 @@ var App = {
   },
   
   updateCalendar : function() {
-    Functions.getCalendar( DayLineSettings.getApiURL());
+    Functions.getCalendar(DayLineSettings.getApiURL());
     this.scheduleWakeup(DayLineSettings.getRefreshRate());
   },
   
@@ -72,12 +74,12 @@ var App = {
      element.remove();
    });
     Functions.clearTimeout();
-    if(this.refreshTimeout !== null) this.clearTimeout(this.refreshTimeout);
+    if(this.refreshTimeout !== null) clearTimeout(this.refreshTimeout);
   },
 
   scheduleWakeup: function(time) {
     var that = this;
-    if(this.refreshTimeout !== null) this.clearTimeout(this.refreshTimeout);
+    if(this.refreshTimeout !== null) clearTimeout(this.refreshTimeout);
     this.refreshTimeout = setTimeout(function()  {
        Functions.deleteEvents();
        that.updateWeather();

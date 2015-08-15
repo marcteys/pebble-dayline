@@ -1,3 +1,4 @@
+/* global clearTimeout */
 var ajax = require('ajax');
 var DaysItem = require('daysItem');
 var Settings = require('settings');
@@ -9,6 +10,7 @@ var Functions = {
   
   timeline : null,
   mainWindow : null,
+  calendarData : null,
   
   initDays : function(dayFormat, rectColor, startHour, endHour) {
       this.timeline = DaysItem.init(this.mainWindow, rectColor,startHour, endHour);
@@ -18,6 +20,7 @@ var Functions = {
     var that = this;
     ajax({url: varURL, type: 'json'},
          function(data) {
+            this.calendarData = data;
             that.fetchEvents(data);
          },
          function(error) {
@@ -45,9 +48,17 @@ var Functions = {
     //                                                                         ^-- data.weather[0].description 
   },
   
+  fetchEventsExternal : function(that) {
+    if(that.calendarData !== null ) {
+      console.log(JSON.stringify(that.calendarData));
+      that.fetchEvents(that.calendarData);
+    }
+  },
+  
   fetchEvents : function(data) {
+    
     DaysItem.deleteEvents();
-
+    
     var now = new Date();
     var relativeTime = null;
     var closestEventTime = 120; // don't diplay events above 120minutes
@@ -79,7 +90,7 @@ var Functions = {
         }
       }      
     }
-    DayLineEvents.displayEventDescription(closestEventDate, closestEventTimeFormat, closestEventText);
+    DayLineEvents.displayEventDescription(closestEventDate, closestEventTimeFormat, closestEventText, this.fetchEventsExternal);
     if(!hasFullDayEvent) DaysItem.removeAllDayBox();
     DaysItem.updateTimeBar(); // TODO : Move that somewhere else
   },
@@ -94,8 +105,8 @@ var Functions = {
   },
   
   clearTimeout : function() {
-    if(DayLineEvents.onGoingTimeout !== null) DayLineEvents.clearTimeout(DayLineEvents.onGoingTimeout);
-    if(DaysItem.timebarTimeout !== null) DaysItem.timebarTimeout(DaysItem.timebarTimeout);
+    if(DayLineEvents.onGoingTimeout !== null) clearTimeout(DayLineEvents.onGoingTimeout);
+    if(DaysItem.timebarTimeout !== null) clearTimeout(DaysItem.timebarTimeout);
   }
   
 };

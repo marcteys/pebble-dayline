@@ -126,8 +126,8 @@ var DayLineWatch = {
   {
     if(this.nextEventText !== null) {
       this.nextEventTitle.remove();
-      this.removeMessage(this.nextEventText, 400);
-    }    
+      this.nextEventText.remove();
+    }  
   },
   
 };
