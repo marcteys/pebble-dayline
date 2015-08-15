@@ -1,6 +1,5 @@
 var UI = require('ui');
 var Settings = require('settings');
-var Wakeup = require('wakeup');
 var Functions = require('functions');
 var DayLineWatch = require('daylineWatch');
 var DayLineSettings = require('daylineSettings');
@@ -21,7 +20,6 @@ var App = {
     DayLineWatch.init(this.mainWindow, DayLineSettings.getBackgroundColor(), DayLineSettings.getDominantColor(),DayLineSettings.getTextColor(), DayLineSettings.getTimeFormat(), DayLineSettings.getDayTop());
     Functions.setWindow(this.mainWindow);
     this.initSettings();
-    
     if(Settings.option('refresh_token') === undefined) {
       DayLineWatch.displayNextEventDetail("Error","Open Pebble app to setup.");
     } else {
@@ -40,42 +38,13 @@ var App = {
   },
   
   updateCalendar : function() {
-    var that = this;
-    console.log("update calendar");
     Functions.getCalendar( DayLineSettings.getApiURL());
-  //  this.scheduleWakeup(2); // TODO : TO remove
-   // DayLineWatch.displayNextEventDetail("DayLineWatch.customMessage, 0");
-
-    //WIP Launch Event
-    /*
-    var today = new Date();
-    var newDateObj = new Date(today.getTime() + 1*60000);
-    console.log('date ' +  newDateObj.getTime());
-    //    number of seconds --------------------------^
-    Wakeup.cancel('all');
-    console.log("Current date :" + today.getTime() +" , set date :" + newDateObj.getTime());
-    Wakeup.schedule(
-      {
-        // Set the wakeup event for one minute from now
-        //time: Date.now() / 1000 + 60,
-    //    time: newDateObj.getTime(),
-        time :  today.getTime() + 1000 * 60,
-        data: { hello: 'world' }
-      },
-      function(e) {
-        if (e.failed) {
-          console.log('Wakeup set failed: ' + e.error);
-        } else {
-          console.log('Wakeup set! Event ID: ' + e.id);
-        }
-      }
-    );
-*/
+    this.scheduleWakeup(DayLineSettings.getRefreshRate());
   },
   
   initSettings : function() {
     var that = this;
-    DayLineSettings.setLocalisation();
+    DayLineSettings.setLocalisation(that.updateWeather);
     DayLineWatch.updateWeatherText("Select a city");
     Settings.config(
       { url: DayLineSettings.getSettingsURL() },
@@ -94,10 +63,7 @@ var App = {
           Settings.option('starthour', e.options.starthour);
           Settings.option('endhour', e.options.endhour);
           Settings.option('refreshrate', e.options.refreshrate);
-          // TODO : Not destroy everything !!
-         // CabbleWatch.redrawBackground(e.options.background);
-         Functions.deleteEvents();
-       //  that.initCalendar();
+          Functions.deleteEvents();
           that.destroy();
           that.init();
         }
@@ -106,37 +72,22 @@ var App = {
   },
   
   destroy: function(callback) {
-    console.log("Destroy app");
    this.mainWindow.each(function(element) {
      element.remove();
    });
-        console.log("Destroyed");
+    Functions.clearTimeout();
+    if(this.refreshTimeout !== null) this.clearTimeout(this.refreshTimeout);
   },
 
   scheduleWakeup: function(time) {
-    /* 
-    * Do not use setTimout // find an other solution
-    * 
-    */
-    /*
     var that = this;
+    if(this.refreshTimeout !== null) this.clearTimeout(this.refreshTimeout);
     this.refreshTimeout = setTimeout(function()  {
        Functions.deleteEvents();
+       that.updateWeather();
        that.updateCalendar();
-    }, (time * 60000) / 6 );*/
+    }, time * 60000);
   },
-
 };
 this.exports = App;
 App.init();
-
-
-  Wakeup.launch(function(e) {
-    if (e.wakeup) {
-      console.log('Woke up to ' + e.id + '! data: ' + JSON.stringify(e.data));
-      App.updateCalendar();
-    } else {
-      console.log('Regular launch not by a wakeup event.');
-    }
-  });
-  

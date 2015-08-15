@@ -46,9 +46,8 @@ var Functions = {
   },
   
   fetchEvents : function(data) {
-    
     DaysItem.deleteEvents();
-    
+
     var now = new Date();
     var relativeTime = null;
     var closestEventTime = 120; // don't diplay events above 120minutes
@@ -68,8 +67,8 @@ var Functions = {
             event.day = 0;
           }
           //Get the closest event;
-          relativeTime = Utils.differenceBetweenDates(now, new Date(event.startDate));
-          if(relativeTime < closestEventTime ) {
+          relativeTime = Utils.differenceRelativeBetweenDates( new Date(event.startDate), now);
+          if(relativeTime > 0 && relativeTime < closestEventTime ) {
             closestEventText = event.description;
             closestEventTime = relativeTime;
             closestEventTimeFormat = event.niceStartTime;
@@ -77,47 +76,14 @@ var Functions = {
           }
          DaysItem.createEvent(this.timeline, event, Settings.option('calendars')[i].color, 0);
          if(!hasFullDayEvent && event.allDay === true) hasFullDayEvent = true;
-          
-          //Loop not at the good position...... do that at the end 
-          
-          // Easier and faster to do that in php ! 
-          
-          /*
-          var startDate = new Date(event.startDate);
-          var endDate = new Date(event.endDate);
-          //Loop again to check if the date is overlaping
-           for(var i2 = 0; i2 < j ; i2++) {
-            for(var k2 = 0; k2 < data.calendars[i2].events.length; k2++) {
-              if(i !== i2 && k !== k2 && !event.allDay && !data.calendars[i2].events[k2].allDay) { // if it's not the same event
-                var overlapingCount = 0;
-                var overlaping = Utils.calculateOverlapingEvent(startDate,endDate, new Date(data.calendars[i2].events[k2].startDate), new Date(data.calendars[i2].events[k2].endDate));
-                if(overlaping !== false) {
-                  overlapingCount++;
-                  var newEvent = data.calendars[i2].events[k2];
-                  newEvent.startDate = overlaping.start;
-                  newEvent.endDate = overlaping.end;
-                  newEvent.duration = overlaping.duration;
-                  console.log("event overlaping : " + newEvent.description );
-                  
-                  // TODO : Ne pas dessiner direct le rectangle mais le stocker dans un array, et compter si cet event possède d'autres events overlaping. 
-                  DaysItem.createEvent(this.timeline, newEvent, "black", 1);
-                }
-              }
-            } 
-          }*/
         }
       }      
     }
-    
     DayLineEvents.displayEventDescription(closestEventDate, closestEventTimeFormat, closestEventText);
     if(!hasFullDayEvent) DaysItem.removeAllDayBox();
-    this.updateTimeBar(); // TODO : Move that somewhere else
+    DaysItem.updateTimeBar(); // TODO : Move that somewhere else
   },
-  
-  displayTimeBar : function(){
-    DaysItem.displayTimeBar(this.timeline, 'red');
-  },
-  
+
   deleteEvents : function() {
     DaysItem.deleteEvents();
   },
@@ -125,6 +91,11 @@ var Functions = {
   setWindow : function(window) {
     this.mainWindow = window;
     DaysItem.setWindow(window);
+  },
+  
+  clearTimeout : function() {
+    if(DayLineEvents.onGoingTimeout !== null) DayLineEvents.clearTimeout(DayLineEvents.onGoingTimeout);
+    if(DaysItem.timebarTimeout !== null) DaysItem.timebarTimeout(DaysItem.timebarTimeout);
   }
   
 };

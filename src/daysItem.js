@@ -17,12 +17,14 @@ var DaysItem =  {
   alldayBoxBorder : null,
   alldayBoxContent :null,
   timebar : null,
+  timebarTimeout: null,
   
   init : function(mainWindow,  backgroundColor, startHourDate, endHourDate) {
     this.startHour = startHourDate;
     this.endHour = endHourDate;
     this.pixelToMinute = Utils.differenceBetweenDates(endHourDate,startHourDate)/(this.height);
-
+    if(this.timebarTimeout !== null) this.clearTimeout(this.timebarTimeout);
+    
     var that = this;
     var dayBorder = new UI.Rect({
       size: new Vector2(that.width+8, that.height+8),
@@ -79,8 +81,6 @@ var DaysItem =  {
   },
   
   createEvent : function(dayRect, data, color, overlapingEvents) {
-    console.log("create event overlaping ? "  +JSON.stringify(data) );
-    
     var that = this;
     var overlapingDivision = overlapingEvents + 1 ;
     var eventWidth = Math.floor(this.width/overlapingDivision);
@@ -123,19 +123,25 @@ var DaysItem =  {
     var now = new Date();
     if(now < this.startHour || now > this.endHour ) {    
       if(this.timebar !== null) {
+        console.log(JSON.Stringify(this.timebar));
         this.timebar.remove();
       }
+      console.log("return");
       return;
     }
+    var that = this;
     var barStartMinute = Utils.differenceBetweenDates(this.startHour,now);
     var startTimeToPixels = Math.round(barStartMinute / this.pixelToMinute);
     var timebarposition = new Vector2(this.startX-2, this.startY + startTimeToPixels);
-    this.timebar  = new UI.Rect({
+    this.timebar = new UI.Rect({
         size: new Vector2(this.width+4,2),
         backgroundColor : color,
         position: timebarposition
       });
      this.mainWindow.add(this.timebar);
+    console.log("add timebar");
+    
+    this.timebarTimeout = setTimeout(function() { that.updateTimeBar(dayRect, color); },that.pixelToMinute * 60000 );
   },
   
   deleteEvents : function() {

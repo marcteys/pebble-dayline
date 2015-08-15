@@ -1,44 +1,54 @@
 //Use wakeup to refresh envents "in  minutes". If it's more than 60 min, refresh every 30min, then refresh evenry 15min, then 5min
 var DayLineWatch = require('daylineWatch');
-var Wakeup = require('wakeup');
 var Utils = require('utils');
 var DayLineSettings = require('daylineSettings');
 
 var DaylineEvents =  {
   
-  onGoingWakeup : null,
+  onGoingTimeout : null,
   
   displayEventDescription : function(date, niceFormat, description)
   {
-   // console.log(niceFormat + " + " + description);
-    var timeFormatted = this.formatTimeText(date, niceFormat);
-     DayLineWatch.displayNextEventDetail(timeFormatted, description);
+   if(this.onGoingTimeout !== null ) clearTimeout(this.onGoingTimeout);
+    var timeFormatted = this.formatTimeText(date, niceFormat,description);
+    console.log(date, niceFormat, description);
+    if(timeFormatted !== null) DayLineWatch.displayNextEventDetail(timeFormatted, description);
   },
   
-  formatTimeText : function(date, niceFormat){
+  formatTimeText : function(date, niceFormat, description){
     var now = new Date();
-    var difference = Utils.differenceBetweenDates(now, date);
+    var that  = this;
+    var difference = Utils.differenceRelativeBetweenDates(date,now);
     var textHour = niceFormat;
-    /*
-    if(difference <= 80) {
-      
-    }else if(difference < 50) {
-    
-    }else if(difference < 30) {
-       
+    this.onGoingTimeout = setTimeout(function(){that.displayEventDescription(date, niceFormat, description);}, 5 * 60000);
+
+    if(difference <= 0) {
+       textHour = "Now";
+      //TODO : Schedule new refresh //Or get next event
+    } else if(difference == 1) {
+       textHour = "In " + difference + " minute";
+      this.onGoingTimeout = setTimeout(function(){that.displayEventDescription(date, niceFormat, description);}, 1 * 60000);
+    }  else if(difference < 10) {
+       textHour = "In " + difference + " minutes";
+      this.onGoingTimeout = setTimeout(function(){that.displayEventDescription(date, niceFormat, description);}, 1 * 60000);
+    } else if(difference < 30) {
+       textHour = "In " + difference + " minutes";
+      this.onGoingTimeout = setTimeout(function(){that.displayEventDescription(date, niceFormat, description);}, 5 * 60000);
+    } else if(difference < 60) {
+       textHour = "In " + difference + " minutes";
+       this.onGoingTimeout = setTimeout(function(){that.displayEventDescription(date, niceFormat, description);}, 15 * 60000);
+    }  else if(difference < 120) {
+       textHour = niceFormat;
+      this.onGoingTimeout = setTimeout(function(){that.displayEventDescription(date, niceFormat, description);}, 45 * 60000);
+    } else {
+      textHour = null;
+      DayLineWatch.removeNextEventDetail();
+      this.onGoingTimeout = setTimeout(function(){that.displayEventDescription(date, niceFormat, description);}, 60 * 60000);
     }
-    else if(difference < 20) {
-       
-    }
-    else if(difference < 15) {
-       textHour = "In " + difference + "minutes";
-    }*/
-    
-    if(difference < 60) textHour = "In " + difference + " minutes";
 
     return textHour;
   },
-  
+
   timeToString : function(hours, minutes) {
     var stringText = "";
     if(DayLineSettings.getTimeFormat() == "24") {
@@ -46,12 +56,6 @@ var DaylineEvents =  {
     }
     return stringText;
   },
-  
-  createSchedule : function(time) {
-    if(onGoingWakeup !== null) Wakeup.cancel(onGoingWakeup);
-    // prepare the wakeup
-    
-  }
   
   
 };

@@ -3,10 +3,14 @@ var Utils =  {
   differenceBetweenDates : function(date1,date2) {
     var diff = Math.abs(date1 - date2);
     var minutes = Math.floor((diff/1000)/60);
-    console.log("differenceBetweenDates : date1  " + date1  + " - date 2 " +  date2 + " - duration " + minutes );
     return minutes;
   },
   
+  differenceRelativeBetweenDates : function(date1,date2) {
+    var diff = date1 - date2;
+    var minutes = Math.floor((diff/1000)/60);
+    return minutes;
+  },
   calculateOverlapingEvent : function(a_start, a_end, b_start, b_end) {
     var n_start = null;
     var n_end = null;

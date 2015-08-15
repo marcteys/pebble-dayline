@@ -61,7 +61,7 @@ var DayLineSettings = {
     return weatherURL;
   },
   
-  setLocalisation : function() {
+  setLocalisation : function(callback) {
     var locationSuccess = function (pos) {
     var coordinates = pos.coords;
         console.log('location : ' + coordinates.latitude + ', ' + coordinates.longitude);
