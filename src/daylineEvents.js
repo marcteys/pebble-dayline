@@ -1,7 +1,7 @@
 //Use wakeup to refresh envents "in  minutes". If it's more than 60 min, refresh every 30min, then refresh evenry 15min, then 5min
 var DayLineWatch = require('daylineWatch');
 var Utils = require('utils');
-var DayLineSettings = require('daylineSettings');
+var Functions = require('functions');
 
 var DaylineEvents =  {
   
@@ -24,7 +24,7 @@ var DaylineEvents =  {
 
     if(difference <= 0) {
        textHour = "Now";
-      //TODO : Schedule new refresh //Or get next event
+        this.onGoingTimeout = setTimeout(that.removeTextEvent,5 * 60000);
     } else if(difference == 1) {
        textHour = "In " + difference + " minute";
       this.onGoingTimeout = setTimeout(function(){that.displayEventDescription(date, niceFormat, description);}, 1 * 60000);
@@ -49,13 +49,11 @@ var DaylineEvents =  {
     return textHour;
   },
 
-  timeToString : function(hours, minutes) {
-    var stringText = "";
-    if(DayLineSettings.getTimeFormat() == "24") {
-      
-    }
-    return stringText;
-  },
+  removeTextEvent : function() {
+       if(this.onGoingTimeout !== null ) clearTimeout(this.onGoingTimeout);
+        DayLineWatch.removeNextEventDetail();
+  }
+  
   
   
 };

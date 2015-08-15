@@ -116,14 +116,13 @@ var DaysItem =  {
     }
   },
   
-  updateTimeBar : function(dayRect, color) {
+  updateTimeBar : function() {
     if(this.timebar !== null) {
       this.timebar.remove();
     }
     var now = new Date();
     if(now < this.startHour || now > this.endHour ) {    
       if(this.timebar !== null) {
-        console.log(JSON.Stringify(this.timebar));
         this.timebar.remove();
       }
       console.log("return");
@@ -135,13 +134,13 @@ var DaysItem =  {
     var timebarposition = new Vector2(this.startX-2, this.startY + startTimeToPixels);
     this.timebar = new UI.Rect({
         size: new Vector2(this.width+4,2),
-        backgroundColor : color,
+        backgroundColor : "red",
         position: timebarposition
       });
      this.mainWindow.add(this.timebar);
-    console.log("add timebar");
+    console.log("add timebar : " + JSON.stringify(timebarposition));
     
-    this.timebarTimeout = setTimeout(function() { that.updateTimeBar(dayRect, color); },that.pixelToMinute * 60000 );
+    this.timebarTimeout = setTimeout(function() { that.updateTimeBar(); },that.pixelToMinute * 60000 );
   },
   
   deleteEvents : function() {

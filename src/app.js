@@ -6,10 +6,6 @@ var DayLineSettings = require('daylineSettings');
 // BUG : GPS NOT WORKING !
 // http://half4.com/cabble/cabble.php?page=settings&project=dayline&%7B%22gps%22%3A%7B%22longitude%22%3A-77.4875%2C%22latitude%22%3A39.0437%2C%22accuracy%22%3A1000%7D%7D&return_to=https%3A//cloudpebble.net/ide/emulator/config%3F#%7B%22gps%22%3A%7B%22longitude%22%3A-77.4875%2C%22latitude%22%3A39.0437%2C%22accuracy%22%3A1000%7D%7D
 
-// TODO : When Settings. is closed, refresh the app with destroy.
-// When it' a regular wakeup, destroy only the events on the right,
-// at the end of the ajax getCalendar is loaded.
-
 var App = {
   
   mainWindow: null,
