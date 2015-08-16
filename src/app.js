@@ -13,7 +13,7 @@ var App = {
   mainWindow: null,
   refreshTimeout : null,
   
-  init:function() {
+  init : function() {
     if(this.mainWindow === null) this.mainWindow = new UI.Window({fullscreen : true });
     DayLineWatch.init(this.mainWindow, DayLineSettings.getBackgroundColor(), DayLineSettings.getDominantColor(),DayLineSettings.getTextColor(), DayLineSettings.getTimeFormat(), DayLineSettings.getDayTop());
     Functions.setWindow(this.mainWindow);

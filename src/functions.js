@@ -11,7 +11,8 @@ var Functions = {
   timeline : null,
   mainWindow : null,
   calendarData : null,
-  
+  onGoingTimeout : null,
+
   initDays : function(dayFormat, rectColor, startHour, endHour) {
       this.timeline = DaysItem.init(this.mainWindow, rectColor,startHour, endHour);
   },
@@ -20,7 +21,7 @@ var Functions = {
     var that = this;
     ajax({url: varURL, type: 'json'},
          function(data) {
-            this.calendarData = data;
+            that.calendarData = data;
             that.fetchEvents(data);
          },
          function(error) {
@@ -49,8 +50,10 @@ var Functions = {
   },
   
   fetchEventsExternal : function(that) {
+    console.log("a");
+   // var that = this;
+    console.log(that.calendarData);
     if(that.calendarData !== null ) {
-      console.log(JSON.stringify(that.calendarData));
       that.fetchEvents(that.calendarData);
     }
   },
@@ -58,7 +61,7 @@ var Functions = {
   fetchEvents : function(data) {
     
     DaysItem.deleteEvents();
-    
+    var that = this;
     var now = new Date();
     var relativeTime = null;
     var closestEventTime = 120; // don't diplay events above 120minutes
@@ -90,10 +93,58 @@ var Functions = {
         }
       }      
     }
-    DayLineEvents.displayEventDescription(closestEventDate, closestEventTimeFormat, closestEventText, this.fetchEventsExternal);
+    this.displayEventDescription(closestEventDate, closestEventTimeFormat, closestEventText);
     if(!hasFullDayEvent) DaysItem.removeAllDayBox();
     DaysItem.updateTimeBar(); // TODO : Move that somewhere else
   },
+  
+  displayEventDescription : function(date, niceFormat, description)
+  {
+   // parent.fetchEventsExternal();
+    var that = this;
+    var parent = this;
+   if(this.onGoingTimeout !== null ) clearTimeout(this.onGoingTimeout);
+    this.onGoingTimeout = setTimeout(that.fetchEventsExternal.bind(that),1000); //change 1 to 5
+    var timeFormatted = this.formatTimeText(date, niceFormat,description, parent);
+    if(timeFormatted !== null) DayLineWatch.displayNextEventDetail(timeFormatted, description);
+  },
+  
+  formatTimeText : function(date, niceFormat, description, parent){
+    var now = new Date();
+    var that  = this;
+    var difference = Utils.differenceRelativeBetweenDates(date,now);
+    var textHour = niceFormat;
+    
+    if(difference <= 0 && difference > -5) {
+       textHour = "Now";
+      this.onGoingTimeout = setTimeout(function(){that.removeTextEvent(parent);},1 * 60000); //change 1 to 5
+    } else if(difference == 1 && difference > -5) {
+       textHour = "In " + difference + " minute";
+      this.onGoingTimeout = setTimeout(function(){that.displayEventDescription(date, niceFormat, description, parent );}, 1 * 60000);
+    }  else if(difference < 10 && difference > -5) {
+       textHour = "In " + difference + " minutes";
+      this.onGoingTimeout = setTimeout(function(){that.displayEventDescription(date, niceFormat, description, parent);}, 1 * 60000);
+    } else if(difference < 30 && difference > -5) {
+       textHour = "In " + difference + " minutes";
+      this.onGoingTimeout = setTimeout(function(){that.displayEventDescription(date, niceFormat, description, parent);}, 5 * 60000);
+    } else if(difference < 60 && difference > -5) {
+       textHour = "In " + difference + " minutes";
+       this.onGoingTimeout = setTimeout(function(){that.displayEventDescription(date, niceFormat, description, parent);}, 15 * 60000);
+    } else if(difference < 70 && difference > -5) {
+       textHour = "In 1 hour";
+       this.onGoingTimeout = setTimeout(function(){that.displayEventDescription(date, niceFormat, description, parent);}, 15 * 60000);
+    }  else if(difference < 120 && difference > -5) {
+       textHour = niceFormat;
+      this.onGoingTimeout = setTimeout(function(){that.displayEventDescription(date, niceFormat, description, parent);}, 45 * 60000);
+    } else {
+      textHour = null;
+      DayLineWatch.removeNextEventDetail();
+      this.onGoingTimeout = setTimeout(function(){that.displayEventDescription(date, niceFormat, description, parent);}, 60 * 60000);
+    }
+
+    return textHour;
+  },
+  
 
   deleteEvents : function() {
     DaysItem.deleteEvents();

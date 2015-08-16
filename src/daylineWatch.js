@@ -124,6 +124,7 @@ var DayLineWatch = {
   
   removeNextEventDetail : function()
   {
+    console.log("remove next evt");
     if(this.nextEventText !== null) {
       this.nextEventTitle.remove();
       this.nextEventText.remove();
