@@ -130,6 +130,7 @@ DayLineWatch.prototype.removeNextEventDetail = function()
   if(this.nextEventText !== null) {
     this.nextEventTitle.remove();
     this.nextEventText.remove();
+    this.nextEventText = null;
   }  
 };
 

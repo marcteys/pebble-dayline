@@ -16,7 +16,6 @@ DayLineSettings.prototype.getSettingsURL = function() {
   if(this.isSettingsInit) {
     settingsUrl += encodeURIComponent(JSON.stringify(Settings.option()));
   }
-  console.log(settingsUrl);
   return settingsUrl;
 };
 
@@ -63,9 +62,10 @@ DayLineSettings.prototype.getWeatherURL = function() {
 
 DayLineSettings.prototype.setLocalisation = function(callback) {
   var locationSuccess = function (pos) {
-  var coordinates = pos.coords;
+      var coordinates = pos.coords;
       console.log('location : ' + coordinates.latitude + ', ' + coordinates.longitude);
       Settings.option("gps", pos.coords);
+      if(callback) callback();
   };
   var locationError = function (err) {
     console.warn('location error (' + err.code + '): ' + err.message);

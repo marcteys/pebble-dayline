@@ -35,7 +35,7 @@ App.prototype.initCalendar = function() {
 };
 
 App.prototype.updateWeather = function() {
-  Functions.getWeather(DayLineSettings.getWeatherURL());
+      Functions.getWeather(DayLineSettings.getWeatherURL());
 };
 
 App.prototype.updateCalendar = function() {
@@ -65,6 +65,9 @@ App.prototype.initSettings = function() {
         Settings.option('endhour', e.options.endhour);
         Settings.option('refreshrate', e.options.refreshrate);
         Functions.deleteEvents();
+        if(Settings.option('weather').type === "gps") {
+          DayLineSettings.prototype.setLocalisation(that.updateWeather());
+        }
         that.destroy();
         that.init();
       }

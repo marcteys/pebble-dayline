@@ -1,9 +1,10 @@
 /* global clearTimeout */
-var ajax = require('ajax'),
-    DaysItem      = require('./daysItem'),
-    Settings      = require('settings'),
-    DayLineWatch  = require('./daylineWatch'),
-    Utils         = require('./utils');
+var ajax            = require('ajax'),
+    DaysItem        = require('./daysItem'),
+    Settings        = require('settings'),
+    DayLineWatch    = require('./daylineWatch'),
+    DayLineSettings = require('./daylineSettings'),
+    Utils           = require('./utils');
 
 function Functions() {
   this.timeline       = null;
@@ -24,8 +25,7 @@ Functions.prototype.getCalendar = function(varURL) {
           that.fetchEvents(data);
        },
        function(error) {
-         console.log('Ajax failed: ' + error);
-         //TODO : Display message "error loading calendars";
+         console.log('Calendar ajax failed: ' + error);
        }
       );
 };
@@ -37,7 +37,7 @@ Functions.prototype.getWeather = function(varURL) {
           that.displayWeather(data);
        },
        function(error) {
-         console.log('Ajax failed: ' + error);
+         console.log('Weather ajax failed: ' + error);
        }
       );
 };
@@ -65,6 +65,7 @@ Functions.prototype.fetchEvents = function(data) {
   var closestEventText       = "";
   var closestEventDate       = null;
   var hasFullDayEvent        = false;
+  var endDate                = DayLineSettings.getEndHour();
   
   if(data.calendars.length !== null) {
     //function to display base events layout
@@ -83,7 +84,8 @@ Functions.prototype.fetchEvents = function(data) {
           closestEventTime = relativeTime;
           closestEventTimeFormat = event.niceStartTime;
           closestEventDate = new Date(event.startDate);
-        }
+        }      
+        if(new Date(event.startDate) > endDate ) continue;
        DaysItem.createEvent(this.timeline, event, Settings.option('calendars')[i].color, 0);
        if(!hasFullDayEvent && event.allDay === true) hasFullDayEvent = true;
       }
@@ -91,7 +93,7 @@ Functions.prototype.fetchEvents = function(data) {
   }
   this.displayEventDescription(closestEventDate, closestEventTimeFormat, closestEventText);
   if(!hasFullDayEvent) DaysItem.removeAllDayBox();
-  DaysItem.updateTimeBar(); // TODO : Move that somewhere else
+  DaysItem.updateTimeBar();
 };
 
 Functions.prototype.displayEventDescription = function(date, niceFormat, description)
@@ -155,7 +157,7 @@ Functions.prototype.setWindow = function(window) {
 };
 
 Functions.prototype.clearTimeout = function() {
-  if(DayLineEvents.onGoingTimeout !== null) clearTimeout(DayLineEvents.onGoingTimeout);
+  if(this.onGoingTimeout !== null) clearTimeout(this.onGoingTimeout);
   if(DaysItem.timebarTimeout !== null) clearTimeout(DaysItem.timebarTimeout);
 };
 

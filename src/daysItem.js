@@ -1,3 +1,4 @@
+/* global clearTimeout */
 var UI = require('ui');
 var Vector2 = require('vector2');
 var Utils = require('./utils');
@@ -23,7 +24,7 @@ DaysItem.prototype.init = function(mainWindow,  backgroundColor, startHourDate, 
   this.startHour = startHourDate;
   this.endHour = endHourDate;
   this.pixelToMinute = Utils.differenceBetweenDates(endHourDate,startHourDate)/(this.height);
-  if(this.timebarTimeout !== null) this.clearTimeout(this.timebarTimeout);
+  if(this.timebarTimeout !== null) clearTimeout(this.timebarTimeout);
   
   var that = this;
   var dayBorder = new UI.Rect({
@@ -125,8 +126,6 @@ DaysItem.prototype.updateTimeBar = function() {
     if(this.timebar !== null) {
       this.timebar.remove();
     }
-    //TODO : Faire un setTimeout dans 5 heures
-    console.log(" remove timebar return");
     return;
   }
   
