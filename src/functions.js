@@ -3,7 +3,6 @@ var ajax = require('ajax'),
     DaysItem      = require('./daysItem'),
     Settings      = require('settings'),
     DayLineWatch  = require('./daylineWatch'),
-    DayLineEvents = require('./daylineEvents'),
     Utils         = require('./utils');
 
 function Functions() {
@@ -49,19 +48,16 @@ Functions.prototype.displayWeather = function(data) {
   //                                                                         ^-- data.weather[0].description 
 };
 
-Functions.prototype.fetchEventsExternal = function(that) {
-  console.log("a");
- // var that = this;
-  console.log(that.calendarData);
-  if(that.calendarData !== null ) {
-    that.fetchEvents(that.calendarData);
+Functions.prototype.fetchEventsExternal = function() {
+  console.log(this.calendarData);
+  if(this.calendarData !== null ) {
+    this.fetchEvents(this.calendarData);
   }
 };
 
 Functions.prototype.fetchEvents = function(data) {
   
   DaysItem.deleteEvents();
-  var that                   = this;
   var now                    = new Date();
   var relativeTime           = null;
   var closestEventTime       = 120; // don't diplay events above 120minutes
@@ -100,16 +96,12 @@ Functions.prototype.fetchEvents = function(data) {
 
 Functions.prototype.displayEventDescription = function(date, niceFormat, description)
 {
- // parent.fetchEventsExternal();
-  var that = this;
-  var parent = this;
  if(this.onGoingTimeout !== null ) clearTimeout(this.onGoingTimeout);
-  this.onGoingTimeout = setTimeout(that.fetchEventsExternal.bind(that),1000); //change 1 to 5
-  var timeFormatted = this.formatTimeText(date, niceFormat,description, parent);
+  var timeFormatted = this.formatTimeText(date, niceFormat,description);
   if(timeFormatted !== null) DayLineWatch.displayNextEventDetail(timeFormatted, description);
 };
 
-Functions.prototype.formatTimeText = function(date, niceFormat, description, parent){
+Functions.prototype.formatTimeText = function(date, niceFormat, description){
   var now = new Date();
   var that  = this;
   var difference = Utils.differenceRelativeBetweenDates(date,now);
@@ -117,33 +109,41 @@ Functions.prototype.formatTimeText = function(date, niceFormat, description, par
   
   if(difference <= 0 && difference > -5) {
      textHour = "Now";
-    this.onGoingTimeout = setTimeout(function(){that.removeTextEvent(parent);},1 * 60000); //change 1 to 5
+    this.onGoingTimeout = setTimeout(function(){that.removeTextEvent();},1 * 60000); //change 1 to 5
   } else if(difference == 1 && difference > -5) {
      textHour = "In " + difference + " minute";
-    this.onGoingTimeout = setTimeout(function(){that.displayEventDescription(date, niceFormat, description, parent );}, 1 * 60000);
+    this.onGoingTimeout = setTimeout(function(){that.displayEventDescription(date, niceFormat, description );}, 1 * 60000);
   }  else if(difference < 10 && difference > -5) {
      textHour = "In " + difference + " minutes";
-    this.onGoingTimeout = setTimeout(function(){that.displayEventDescription(date, niceFormat, description, parent);}, 1 * 60000);
+    this.onGoingTimeout = setTimeout(function(){that.displayEventDescription(date, niceFormat, description);}, 1 * 60000);
   } else if(difference < 30 && difference > -5) {
      textHour = "In " + difference + " minutes";
-    this.onGoingTimeout = setTimeout(function(){that.displayEventDescription(date, niceFormat, description, parent);}, 5 * 60000);
+    this.onGoingTimeout = setTimeout(function(){that.displayEventDescription(date, niceFormat, description);}, 5 * 60000);
   } else if(difference < 60 && difference > -5) {
      textHour = "In " + difference + " minutes";
-     this.onGoingTimeout = setTimeout(function(){that.displayEventDescription(date, niceFormat, description, parent);}, 15 * 60000);
+     this.onGoingTimeout = setTimeout(function(){that.displayEventDescription(date, niceFormat, description);}, 15 * 60000);
   } else if(difference < 70 && difference > -5) {
      textHour = "In 1 hour";
-     this.onGoingTimeout = setTimeout(function(){that.displayEventDescription(date, niceFormat, description, parent);}, 15 * 60000);
+     this.onGoingTimeout = setTimeout(function(){that.displayEventDescription(date, niceFormat, description);}, 15 * 60000);
   }  else if(difference < 120 && difference > -5) {
      textHour = niceFormat;
-    this.onGoingTimeout = setTimeout(function(){that.displayEventDescription(date, niceFormat, description, parent);}, 45 * 60000);
+    this.onGoingTimeout = setTimeout(function(){that.displayEventDescription(date, niceFormat, description);}, 45 * 60000);
   } else {
     textHour = null;
     DayLineWatch.removeNextEventDetail();
-    this.onGoingTimeout = setTimeout(function(){that.displayEventDescription(date, niceFormat, description, parent);}, 60 * 60000);
+    this.onGoingTimeout = setTimeout(function(){that.displayEventDescription(date, niceFormat, description);}, 60 * 60000);
   }
 
   return textHour;
 };
+
+Functions.prototype.removeTextEvent = function() {
+  if(this.onGoingTimeout !== null ) clearTimeout(this.onGoingTimeout);
+  DayLineWatch.removeNextEventDetail();
+  this.fetchEventsExternal();
+};
+
+
 
 Functions.prototype.deleteEvents = function() {
   DaysItem.deleteEvents();

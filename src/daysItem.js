@@ -125,9 +125,11 @@ DaysItem.prototype.updateTimeBar = function() {
     if(this.timebar !== null) {
       this.timebar.remove();
     }
-    console.log("return");
+    //TODO : Faire un setTimeout dans 5 heures
+    console.log(" remove timebar return");
     return;
   }
+  
   var that = this;
   var barStartMinute = Utils.differenceBetweenDates(this.startHour,now);
   var startTimeToPixels = Math.round(barStartMinute / this.pixelToMinute);
