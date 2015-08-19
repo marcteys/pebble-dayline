@@ -50,6 +50,10 @@ DaysItem.prototype.init = function(mainWindow,  backgroundColor, startHourDate, 
   return dayRect;
 };
 
+DaysItem.prototype.updateDays = function(startHourDate,endHourDate) {
+  this.startHour = startHourDate;
+  this.endHour = endHourDate;
+};
 
 DaysItem.prototype.displayAllDayBox = function()
 {

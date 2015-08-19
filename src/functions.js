@@ -13,8 +13,12 @@ function Functions() {
   this.onGoingTimeout = null;
 }
 
-Functions.prototype.initDays = function(dayFormat, rectColor, startHour, endHour) {
-    this.timeline = DaysItem.init(this.mainWindow, rectColor,startHour, endHour);
+Functions.prototype.initDays = function() {
+    this.timeline = DaysItem.init(this.mainWindow, DayLineSettings.getBackgroundColor(),DayLineSettings.getStartHour(),DayLineSettings.getEndHour());
+};
+
+Functions.prototype.updateDays = function() {
+   DaysItem.updateDays(DayLineSettings.getStartHour(),DayLineSettings.getEndHour());
 };
 
 Functions.prototype.getCalendar = function(varURL) {
@@ -52,6 +56,8 @@ Functions.prototype.fetchEventsExternal = function() {
   console.log(this.calendarData);
   if(this.calendarData !== null ) {
     this.fetchEvents(this.calendarData);
+  } else {
+    this.getCalendar(DayLineSettings.getApiURL());
   }
 };
 
@@ -85,7 +91,7 @@ Functions.prototype.fetchEvents = function(data) {
           closestEventTimeFormat = event.niceStartTime;
           closestEventDate = new Date(event.startDate);
         }      
-        if(new Date(event.startDate) > endDate ) continue;
+       if(new Date(event.startDate) > endDate ) continue;
        DaysItem.createEvent(this.timeline, event, Settings.option('calendars')[i].color, 0);
        if(!hasFullDayEvent && event.allDay === true) hasFullDayEvent = true;
       }
@@ -135,7 +141,6 @@ Functions.prototype.formatTimeText = function(date, niceFormat, description){
     DayLineWatch.removeNextEventDetail();
     this.onGoingTimeout = setTimeout(function(){that.displayEventDescription(date, niceFormat, description);}, 60 * 60000);
   }
-
   return textHour;
 };
 
@@ -144,8 +149,6 @@ Functions.prototype.removeTextEvent = function() {
   DayLineWatch.removeNextEventDetail();
   this.fetchEventsExternal();
 };
-
-
 
 Functions.prototype.deleteEvents = function() {
   DaysItem.deleteEvents();

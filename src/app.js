@@ -22,24 +22,25 @@ App.prototype.init = function() {
     Functions.setWindow(this.mainWindow);
     this.initSettings();
     if(Settings.option('refresh_token') === undefined) {
-      DayLineWatch.displayNextEventDetail("Error","Open Pebble app to setup.");
+      DayLineWatch.displayNextEventDetail("Initialize","Open Pebble app.");
     } else {
       this.initCalendar();
     }
 };
 
 App.prototype.initCalendar = function() {
-  Functions.initDays(DayLineSettings.getDayFormat(),DayLineSettings.getBackgroundColor(),DayLineSettings.getStartHour(),DayLineSettings.getEndHour());
+  Functions.initDays();
   this.updateCalendar();
   this.updateWeather();
 };
 
 App.prototype.updateWeather = function() {
-      Functions.getWeather(DayLineSettings.getWeatherURL());
+  Functions.getWeather(DayLineSettings.getWeatherURL());
 };
 
 App.prototype.updateCalendar = function() {
   this.scheduleWakeup(DayLineSettings.getRefreshRate());
+  Functions.updateDays();
   Functions.getCalendar(DayLineSettings.getApiURL());
 };
 
@@ -64,7 +65,7 @@ App.prototype.initSettings = function() {
         Settings.option('starthour', e.options.starthour);
         Settings.option('endhour', e.options.endhour);
         Settings.option('refreshrate', e.options.refreshrate);
-        console.log(e.options.refreshrate);
+
         Functions.deleteEvents();
         if(Settings.option('weather').type === "gps") {
           DayLineSettings.prototype.setLocalisation(that.updateWeather());
@@ -91,7 +92,7 @@ App.prototype.scheduleWakeup = function(time) {
      Functions.deleteEvents();
      that.updateWeather();
      that.updateCalendar();
-  }, 30000/*time * 60000*/);
+  }, time * 60000);
 };
 
 new App();
