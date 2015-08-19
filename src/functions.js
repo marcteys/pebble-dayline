@@ -115,10 +115,10 @@ Functions.prototype.formatTimeText = function(date, niceFormat, description){
   var difference = Utils.differenceRelativeBetweenDates(date,now);
   var textHour = niceFormat;
   
-  if(difference <= 0 && difference > -5) {
+  if(difference <= 0 && difference > -10) {
      textHour = "Now";
     this.onGoingTimeout = setTimeout(function(){that.removeTextEvent();},1 * 60000); //change 1 to 5
-  } else if(difference == 1 && difference > -5) {
+  } else if(difference == 1) {
      textHour = "In " + difference + " minute";
     this.onGoingTimeout = setTimeout(function(){that.displayEventDescription(date, niceFormat, description );}, 1 * 60000);
   }  else if(difference < 10 && difference > -5) {
