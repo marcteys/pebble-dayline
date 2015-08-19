@@ -39,8 +39,8 @@ App.prototype.updateWeather = function() {
 };
 
 App.prototype.updateCalendar = function() {
-  Functions.getCalendar(DayLineSettings.getApiURL());
   this.scheduleWakeup(DayLineSettings.getRefreshRate());
+  Functions.getCalendar(DayLineSettings.getApiURL());
 };
 
 App.prototype.initSettings = function() {
@@ -64,6 +64,7 @@ App.prototype.initSettings = function() {
         Settings.option('starthour', e.options.starthour);
         Settings.option('endhour', e.options.endhour);
         Settings.option('refreshrate', e.options.refreshrate);
+        console.log(e.options.refreshrate);
         Functions.deleteEvents();
         if(Settings.option('weather').type === "gps") {
           DayLineSettings.prototype.setLocalisation(that.updateWeather());
@@ -90,7 +91,7 @@ App.prototype.scheduleWakeup = function(time) {
      Functions.deleteEvents();
      that.updateWeather();
      that.updateCalendar();
-  }, time * 60000);
+  }, 30000/*time * 60000*/);
 };
 
 new App();

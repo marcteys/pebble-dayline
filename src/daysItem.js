@@ -118,18 +118,19 @@ DaysItem.prototype.createEvent = function(dayRect, data, color, overlapingEvents
 };
 
 DaysItem.prototype.updateTimeBar = function() {
+  var that = this;
   if(this.timebar !== null) {
     this.timebar.remove();
   }
   var now = new Date();
-  if(now < this.startHour || now > this.endHour ) {    
+  if(now < this.startHour || now >= this.endHour ) {    
     if(this.timebar !== null) {
       this.timebar.remove();
     }
+    this.timebarTimeout = setTimeout(function() { that.updateTimeBar(); },120 * 60000 );
     return;
   }
   
-  var that = this;
   var barStartMinute = Utils.differenceBetweenDates(this.startHour,now);
   var startTimeToPixels = Math.round(barStartMinute / this.pixelToMinute);
   var timebarposition = new Vector2(this.startX-2, this.startY + startTimeToPixels);
@@ -147,8 +148,10 @@ DaysItem.prototype.deleteEvents = function() {
   if(this.eventsGraphic.length !== 0) {
     for(var i = this.eventsGraphic.length; i >= 0 ;  i -- ) {
        try{
-         this.eventsGraphic[i].remove();
-         this.eventsGraphic.splice(i, 1);
+         this.mainWindow.remove(this.eventsGraphic[i]);
+
+       //  this.eventsGraphic[i].remove();
+      //   this.eventsGraphic.splice(i, 1);
        } catch(e) {
          console.log("Impossible to delete " + e);
        } 
