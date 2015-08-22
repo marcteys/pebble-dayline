@@ -53,7 +53,6 @@ Functions.prototype.displayWeather = function(data) {
 };
 
 Functions.prototype.fetchEventsExternal = function() {
-  console.log(this.calendarData);
   if(this.calendarData !== null ) {
     this.fetchEvents(this.calendarData);
   } else {
@@ -64,6 +63,7 @@ Functions.prototype.fetchEventsExternal = function() {
 Functions.prototype.fetchEvents = function(data) {
   
   DaysItem.deleteEvents();
+  DaysItem.displayAllDayBox();
   var now                    = new Date();
   var relativeTime           = null;
   var closestEventTime       = 120; // don't diplay events above 120minutes
@@ -72,11 +72,14 @@ Functions.prototype.fetchEvents = function(data) {
   var closestEventDate       = null;
   var hasFullDayEvent        = false;
   var endDate                = DayLineSettings.getEndHour();
-  
+  var calColor               = 'black';
+  var colorSettings          = Settings.option('calendars');
+
   if(data.calendars.length !== null) {
     //function to display base events layout
     for(var i = 0,  j = data.calendars.length; i < j ; i++) {
       //TODO : if data.calendars[i].id == "overlaping", return
+      if(data.calendars[i].id == "overlaping") continue;
       for(var k = 0,  m = data.calendars[i].events.length; k < m; k++) {
         var event = data.calendars[i].events[k];
         if(event.day < 0) { 
@@ -92,14 +95,43 @@ Functions.prototype.fetchEvents = function(data) {
           closestEventDate = new Date(event.startDate);
         }      
        if(new Date(event.startDate) > endDate ) continue;
-       DaysItem.createEvent(this.timeline, event, Settings.option('calendars')[i].color, 0);
-       if(!hasFullDayEvent && event.allDay === true) hasFullDayEvent = true;
+        for(var c = 0; c < colorSettings.length; c++) {
+          if(colorSettings[c].name === data.calendars[i].id ) calColor = colorSettings[c].color; 
+        }
+       DaysItem.createEvent(this.timeline, event, calColor);
+       if(event.allDay && !hasFullDayEvent) hasFullDayEvent = true;
       }
     }      
   }
+
+  
+
+  if(DayLineSettings.getOverlap()) this.displayOverlapingEvents(data.calendars);
   this.displayEventDescription(closestEventDate, closestEventTimeFormat, closestEventText);
   if(!hasFullDayEvent) DaysItem.removeAllDayBox();
   DaysItem.updateTimeBar();
+};
+
+Functions.prototype.displayOverlapingEvents = function(data) {
+  var keys = Object.keys(data);
+  var last = keys[keys.length-1];
+  var overlapEvents = data[last].events;
+    var colorSettings = Settings.option('calendars');
+
+    //Overlaping Events
+      for(var i = 0,  j = overlapEvents.length; i < j; i++) {
+        var event = overlapEvents[i];
+        var calColor = 'black';
+        
+        if(event.day < 0) { 
+          event.duration = event.duration + event.day;
+          event.day = 0;
+        }
+        for(var m = 0; m < colorSettings.length; m++) {
+          if(colorSettings[m].name === event.calendar ) calColor = colorSettings[m].color; 
+        }
+       DaysItem.createEventOverlaping(this.timeline, event, calColor, event.overlapingLayer,event.overlapingNumber);
+      }
 };
 
 Functions.prototype.displayEventDescription = function(date, niceFormat, description)

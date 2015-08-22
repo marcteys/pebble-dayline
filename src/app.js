@@ -8,11 +8,9 @@ var UI              = require('ui'),
 // TODO : Callback on GS location found
 // http://half4.com/cabble/cabble.php?page=settings&project=dayline&%7B%22gps%22%3A%7B%22longitude%22%3A-77.4875%2C%22latitude%22%3A39.0437%2C%22accuracy%22%3A1000%7D%7D&return_to=https%3A//cloudpebble.net/ide/emulator/config%3F#%7B%22gps%22%3A%7B%22longitude%22%3A-77.4875%2C%22latitude%22%3A39.0437%2C%22accuracy%22%3A1000%7D%7D
 
-
 function App() {
   this.mainWindow = null;
   this.refreshTimeout = null;
-  this.caca = 10;
   this.init();
 }
 
@@ -47,7 +45,7 @@ App.prototype.updateCalendar = function() {
 App.prototype.initSettings = function() {
   var that = this;
   DayLineSettings.setLocalisation(that.updateWeather);
-  DayLineWatch.updateWeatherText("Select a city");
+  DayLineWatch.updateWeatherText("Loading data");
   Settings.config(
     { url: DayLineSettings.getSettingsURL() },
     function(e) {
@@ -65,13 +63,13 @@ App.prototype.initSettings = function() {
         Settings.option('starthour', e.options.starthour);
         Settings.option('endhour', e.options.endhour);
         Settings.option('refreshrate', e.options.refreshrate);
-
+        Settings.option('overlap', e.options.overlap);
         Functions.deleteEvents();
+        
         if(Settings.option('weather').type === "gps") {
           DayLineSettings.prototype.setLocalisation(that.updateWeather());
         }
         that.destroy();
-        that.init();
       }
     }
   );
@@ -81,8 +79,11 @@ App.prototype.destroy = function(callback) {
  this.mainWindow.each(function(element) {
    element.remove();
  });
+ // this.mainWindow.hide();
+ // this.mainWindow = null;
   Functions.clearTimeout();
   if(this.refreshTimeout !== null) clearTimeout(this.refreshTimeout);
+  this.init();
 };
 
 App.prototype.scheduleWakeup = function(time) {

@@ -97,6 +97,12 @@ DayLineSettings.prototype.getTextColor = function() {
   return textCol;
 };
 
+DayLineSettings.prototype.getCalendarColor = function() {
+  var textCol = 'black';
+  if(Settings.option('textcol')  !== undefined) textCol = Settings.option('textcol');
+  return textCol;
+};
+
 DayLineSettings.prototype.getTimeFormat = function() {
   var timeformat = '24';
   if(Settings.option('timeformat')  !== undefined) timeformat = Settings.option('timeformat');
@@ -107,6 +113,12 @@ DayLineSettings.prototype.getDayFormat = function() {
   var dayFormat = 'num';
   if(Settings.option('dayformat')  !== undefined) dayFormat = Settings.option('dayformat');
   return dayFormat;
+};
+
+DayLineSettings.prototype.getOverlap = function() {
+  var overlap = true;
+  if(Settings.option('overlap')  !== undefined) overlap = Settings.option('overlap');
+  return overlap;
 };
 
 DayLineSettings.prototype.getDayTop = function() {

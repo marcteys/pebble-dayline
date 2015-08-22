@@ -58,6 +58,8 @@ DaysItem.prototype.updateDays = function(startHourDate,endHourDate) {
 DaysItem.prototype.displayAllDayBox = function()
 {
   var that = this;
+  if(this.alldayBoxBorder !== null) this.removeAllDayBox();
+  
   this.alldayBoxBorder  = new UI.Rect({
     size: new Vector2(that.width+8, 4),
     position: new Vector2(that.startX-4, that.startY-8),
@@ -85,13 +87,10 @@ DaysItem.prototype.removeAllDayBox = function()
   }    
 };
 
-DaysItem.prototype.createEvent = function(dayRect, data, color, overlapingEvents) {
+DaysItem.prototype.createEvent = function(dayRect, data, color) {
   var that = this;
-  var overlapingDivision = overlapingEvents + 1 ;
-  var eventWidth = Math.floor(this.width/overlapingDivision);
 
-  //If the event is all the d == 0ay
-  if(data.allDay === true) { // TODO : Visual cue for this function !!
+  if(data.allDay === true) {
     if(this.alldayBoxContent === null) this.displayAllDayBox();
     for(var i = 0,  j=data.duration; i < j ; i++) {
       var rectDayEvent = new UI.Rect({
@@ -104,11 +103,45 @@ DaysItem.prototype.createEvent = function(dayRect, data, color, overlapingEvents
     }
   }
   else { 
-    var xPos = that.startX + (overlapingEvents * eventWidth /* / overlapingEvents */ ); // in case of overlaping events
+    var xPos = that.startX; 
     var durationToPixels = Math.round(data.duration / this.pixelToMinute); //always display at least 1px height
     var eventStartMinutes = Utils.differenceBetweenDates(this.startHour,new Date(data.startDate));
     var startTimeToPixels = Math.round(eventStartMinutes / this.pixelToMinute);
     var eventPosition = new Vector2(xPos, that.startY + startTimeToPixels);
+    
+    var rectEvent = new UI.Rect({
+      size: new Vector2(this.width ,durationToPixels),
+      backgroundColor : color,
+      position: eventPosition
+    });
+    
+    this.mainWindow.add(rectEvent);
+    this.eventsGraphic.push(rectEvent);
+  }
+};
+
+
+DaysItem.prototype.createEventOverlaping = function(dayRect, data, color, overlapingLayer, overlapingNumber) {
+  var that = this;
+  var eventWidth = this.width;
+  var evtPosX = this.startX;
+
+  if(overlapingNumber === 1) {
+    eventWidth = 4;
+    if(overlapingLayer === 0)  evtPosX = this.startX + 5;
+  }
+  if(overlapingNumber === 2) {
+    eventWidth = 3;
+    if(overlapingLayer === 0)  evtPosX = this.startX + 3;
+    if(overlapingLayer === 1)  evtPosX = this.startX + 6;
+  }
+
+  //If the event is all the d == 0ay
+  if(data.allDay === false) { 
+    var durationToPixels = Math.round(data.duration / this.pixelToMinute); //always display at least 1px height
+    var eventStartMinutes = Utils.differenceBetweenDates(this.startHour,new Date(data.startDate));
+    var startTimeToPixels = Math.round(eventStartMinutes / this.pixelToMinute);
+    var eventPosition = new Vector2(evtPosX, that.startY + startTimeToPixels);
     
     var rectEvent = new UI.Rect({
       size: new Vector2(eventWidth ,durationToPixels),
@@ -120,6 +153,9 @@ DaysItem.prototype.createEvent = function(dayRect, data, color, overlapingEvents
     this.eventsGraphic.push(rectEvent);
   }
 };
+
+
+
 
 DaysItem.prototype.updateTimeBar = function() {
   var that = this;
